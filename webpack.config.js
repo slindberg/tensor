@@ -27,6 +27,13 @@ module.exports = {
         loaders: [ 'babel' ],
         include: dir('app'),
       },
+      {
+        test: /\.scss$/,
+        loaders: [ 'style', 'css?modules&sourceMap', 'sass?sourceMap' ],
+      },
     ],
+  },
+  resolve: {
+    extensions: [ '', '.js', '.scss' ],
   },
 }

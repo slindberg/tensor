@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import ScalarInput from './scalar-input'
+import styles from '../styles/input'
 
 export default class TensorInput extends Component {
   updateVector(changedIndex, newValue) {
@@ -13,9 +14,11 @@ export default class TensorInput extends Component {
   }
 
   render() {
-    if (Array.isArray(this.props.value)) {
+    const order = orderFor(this.props.value)
+
+    if (order > 0) {
       return (
-        <div className="tensor-input">
+        <div className={order > 1 ? styles.tensor : styles.vector}>
           {this.props.value.map((value, index) =>
             <TensorInput key={index} value={value} onChange={this.updateVector.bind(this, index)} />
           )}
@@ -27,4 +30,8 @@ export default class TensorInput extends Component {
       )
     }
   }
+}
+
+function orderFor(value) {
+  return Array.isArray(value) ? orderFor(value[0]) + 1 : 0
 }

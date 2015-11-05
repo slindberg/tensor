@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import styles from '../styles/input'
 
 export default class ScalarInput extends Component {
   updateValue(event) {
@@ -7,7 +8,7 @@ export default class ScalarInput extends Component {
 
   render() {
     return (
-      <div className="scalar-input">
+      <div className={styles.scalar}>
         <input type="text" value={this.props.value} onChange={this.updateValue.bind(this)} />
       </div>
     )

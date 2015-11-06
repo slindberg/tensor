@@ -1,5 +1,6 @@
 var path = require('path')
 var webpack = require('webpack')
+var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 function dir(name) {
   return path.join(__dirname, name)
@@ -19,6 +20,7 @@ module.exports = {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
+    new ExtractTextPlugin('styles.css'),
   ],
   module: {
     loaders: [
@@ -29,7 +31,7 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        loaders: [ 'style', 'css?modules&sourceMap', 'sass?sourceMap' ],
+        loader: ExtractTextPlugin.extract('style', [ 'css?modules&sourceMap', 'sass?sourceMap' ]),
       },
     ],
   },

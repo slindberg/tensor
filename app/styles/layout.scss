@@ -1,0 +1,24 @@
+.container {
+  display: flex;
+  margin: 100px auto;
+  max-width: 1300px;
+
+  :before {
+    content: '';
+    display: table;
+  }
+
+  > div {
+    box-sizing: border-box;
+  }
+}
+
+.controls {
+  width: 300px;
+  padding: 10px 50px;
+}
+
+.visualization {
+  flex: 1;
+  padding: 1px;
+}

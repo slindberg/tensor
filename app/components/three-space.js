@@ -20,14 +20,14 @@ export default class ThreeSpace extends Component {
   render() {
     const { width, height } = this.state.dimensions
     const size = Math.min(width, height)
-    const axisSize = 400
+    const axisSize = 500
     const tensorSize = 300
     const cameraProps = {
       fov: 75,
       aspect: 1,
       near: 1,
       far: 5000,
-      position: new THREE.Vector3(400, 400, 600),
+      position: new THREE.Vector3(300, 300, 400),
       lookat: new THREE.Vector3(0, 0, 0),
     }
     const lightProps = {

@@ -28,7 +28,7 @@ export class App extends Component {
           <TensorInput value={this.state.tensor} onChange={this.updateTensor.bind(this)} />
         </div>
         <div className={styles.visualization}>
-          <ThreeSpace height="500" width="500" />
+          <ThreeSpace />
         </div>
       </div>
     )

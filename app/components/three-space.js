@@ -7,11 +7,17 @@ export default class ThreeSpace extends Component {
   constructor() {
     super()
 
-    this.state = { size: 0 }
+    this.state = {
+      dimensions: {
+        width: 0,
+        height: 0,
+      },
+    }
   }
 
   render() {
-    const { size } = this.state
+    const { width, height } = this.state.dimensions
+    const size = Math.min(width, height)
     const axisSize = 300
     const cameraProps = {
       fov: 75,
@@ -24,8 +30,8 @@ export default class ThreeSpace extends Component {
 
     return (
       <Measure
-        whitelist={[ 'width' ]}
-        onMeasure={(dimensions) => { this.setState({ size: dimensions.width })}}
+        whitelist={[ 'width', 'height' ]}
+        onMeasure={(dimensions) => { this.setState({ dimensions })}}
       >
         <div>
           <Scene width={size} height={size} camera="maincamera" transparent={true}>

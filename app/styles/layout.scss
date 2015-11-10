@@ -1,6 +1,7 @@
 .container {
   display: flex;
-  margin: 100px auto;
+  height: 100%;
+  margin: 20px auto;
   max-width: 1300px;
 
   :before {
@@ -20,5 +21,10 @@
 
 .visualization {
   flex: 1;
+  height: 100%;
   padding: 1px;
+
+  > div {
+    height: 100%;
+  }
 }

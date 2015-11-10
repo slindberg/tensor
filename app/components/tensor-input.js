@@ -14,19 +14,20 @@ export default class TensorInput extends Component {
   }
 
   render() {
+    const { value, disabled } = this.props
     const order = orderFor(this.props.value)
 
     if (order > 0) {
       return (
         <div className={order > 1 ? styles.tensor : styles.vector}>
-          {this.props.value.map((value, index) =>
-            <TensorInput key={index} value={value} onChange={this.updateVector.bind(this, index)} />
+          {value.map((value, index) =>
+            <TensorInput key={index} value={value} disabled={disabled} onChange={this.updateVector.bind(this, index)} />
           )}
         </div>
       )
     } else {
       return (
-        <ScalarInput value={this.props.value} onChange={this.updateScalar.bind(this)} />
+        <ScalarInput value={value} disabled={disabled} onChange={this.updateScalar.bind(this)} />
       )
     }
   }

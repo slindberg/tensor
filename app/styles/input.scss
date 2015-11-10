@@ -1,7 +1,10 @@
-$input-color: #000;
 $input-background-color: #fff;
 $input-border-color: #ccc;
 $input-outline-color: #4285f4;
+$input-disabled-background-color: #eee;
+$tensor-border-color: #555;
+
+$input-width: 60px;
 
 .vector {
   > div {
@@ -10,18 +13,23 @@ $input-outline-color: #4285f4;
 }
 
 .tensor {
-  // width: 200px;
+  width: $input-width * 3;
+  padding: 8px;
+  border: 2px solid $tensor-border-color;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  border-radius: 10px/40px;
 }
 
 .scalar {
   input {
+    box-sizing: border-box;
     height: 26px;
-    width: 50px;
+    width: $input-width - 4px;
     margin: 1px 2px;
     padding: 2px 5px;
     font-size: 15px;
     line-height: 20px;
-    color: $input-color;
     vertical-align: middle;
     border-radius: 2px;
     background: $input-background-color;
@@ -30,6 +38,10 @@ $input-outline-color: #4285f4;
 
     &:focus {
       box-shadow: 0 0 3pt 2pt $input-outline-color;
+    }
+
+    &[disabled] {
+      background: $input-disabled-background-color;
     }
   }
 }

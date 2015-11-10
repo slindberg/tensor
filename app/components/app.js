@@ -7,17 +7,20 @@ export class App extends Component {
   constructor(props, context) {
     super(props, context)
 
+    const zeroMatrix = [
+      [ 0, 0, 0 ],
+      [ 0, 0, 0 ],
+      [ 0, 0, 0 ],
+    ]
+
     this.state = {
-      tensor: [
-        [ 0, 0, 0 ],
-        [ 0, 0, 0 ],
-        [ 0, 0, 0 ],
-      ],
+      inputTensor: zeroMatrix,
+      transformedTensor: zeroMatrix,
     }
   }
 
   updateTensor(value) {
-    this.state.tensor = value
+    this.state.inputTensor = value
     this.setState(this.state)
   }
 
@@ -25,7 +28,10 @@ export class App extends Component {
     return (
       <div className={styles.container}>
         <div className={styles.controls}>
-          <TensorInput value={this.state.tensor} onChange={this.updateTensor.bind(this)} />
+          <h3>Input</h3>
+          <TensorInput value={this.state.inputTensor} onChange={this.updateTensor.bind(this)} />
+          <h3>Transformed</h3>
+          <TensorInput value={this.state.transformedTensor} disabled={true} />
         </div>
         <div className={styles.visualization}>
           <ThreeSpace />

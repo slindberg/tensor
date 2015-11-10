@@ -9,7 +9,7 @@ export default class ScalarInput extends Component {
   render() {
     return (
       <div className={styles.scalar}>
-        <input type="text" value={this.props.value} onChange={this.updateValue.bind(this)} />
+        <input type="text" value={this.props.value} disabled={this.props.disabled} onChange={this.updateValue.bind(this)} />
       </div>
     )
   }

@@ -46,7 +46,7 @@ export default class ThreeSpace extends Component {
             <AmbientLight color={colors.ambientLight} />
             <DirectionalLight color={colors.directionalLight} {...lightProps} />
             <AxisHelper size={axisSize} />
-            <Tensor size={tensorSize} />
+            <Tensor value={this.props.tensor} size={tensorSize} />
           </Scene>
         </div>
       </Measure>

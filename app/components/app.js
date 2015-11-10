@@ -34,7 +34,7 @@ export class App extends Component {
           <TensorInput value={this.state.transformedTensor} disabled={true} />
         </div>
         <div className={styles.visualization}>
-          <ThreeSpace />
+          <ThreeSpace tensor={this.state.inputTensor} />
         </div>
       </div>
     )

@@ -3,7 +3,14 @@ import styles from '../styles/input'
 
 export default class ScalarInput extends Component {
   updateValue(event) {
-    this.props.onChange(event.target.value)
+    const valueStr = event.target.value
+    let value = +valueStr
+
+    if (isNaN(value)) {
+      value = 0
+    }
+
+    this.props.onChange(value)
   }
 
   render() {

@@ -20,6 +20,7 @@
     "express": "^4.13.3",
     "extract-text-webpack-plugin": "^0.9.1",
     "node-sass": "^3.4.1",
+    "numeric": "^1.2.6",
     "react": "^0.14.2",
     "react-dom": "^0.14.2",
     "react-measure": "^0.3.2",

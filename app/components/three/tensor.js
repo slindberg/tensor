@@ -1,37 +1,47 @@
 import React, { Component } from 'react'
 import { Object3D } from 'react-three'
 import THREE from 'three'
+import numeric from 'numeric'
 import Cube from './cube'
 import Vector from './vector'
 import colors from '../../constants/colors'
 
 export default class Tensor extends Component {
   render() {
-    const { value, size } = this.props
-    const offset = size / 2
-    const magnitude = size * 5 / 8
+    const { size } = this.props
+    const vectorProps = this.buildVectors()
     const cubeProps = {
       position: new THREE.Vector3(0, 0, 0),
       size: size,
       color: colors.tensor,
     }
 
-    // TODO: this is an arbitrary number that is used to scale tensor component
-    // magnitudes in order to visually scale vectors. It needs to be the
-    // largest eigen value of the matrix
-    const maxValue = 100
+    return (
+      <Object3D>
+        <Cube {...cubeProps} />
+        {vectorProps.map((props) => {
+          return <Vector key={props.key} {...props} />
+        })}
+      </Object3D>
+    )
+  }
 
-    const vectorProps = [
-      buildVector('x', 'x', value[0][0]),
-      buildVector('x', 'y', value[0][1]),
-      buildVector('x', 'z', value[0][2]),
-      buildVector('y', 'x', value[1][0]),
-      buildVector('y', 'y', value[1][1]),
-      buildVector('y', 'z', value[1][2]),
-      buildVector('z', 'x', value[2][0]),
-      buildVector('z', 'y', value[2][1]),
-      buildVector('z', 'z', value[2][2]),
-    ]
+  buildVectors() {
+    const { value, size } = this.props
+    const offset = size / 2
+    const magnitude = size * 5 / 8
+    let eigenValues
+
+    try {
+      eigenValues = numeric.eig(value)
+    } catch (error) {
+      console.debug('Invalid tensor, cannot find eigenvalues')
+
+      return []
+    }
+
+    // Scale the vectors by the largest principle value
+    const maxValue = Math.max(...numeric.abs(eigenValues.lambda.x))
 
     function buildVector(face, orientation, value) {
       const faceIndex = 'xyz'.indexOf(face)
@@ -64,13 +74,16 @@ export default class Tensor extends Component {
       }
     }
 
-    return (
-      <Object3D>
-        <Cube {...cubeProps} />
-        {vectorProps.map((props) => {
-          return <Vector key={props.key} {...props} />
-        })}
-      </Object3D>
-    )
+    return [
+      buildVector('x', 'x', value[0][0]),
+      buildVector('x', 'y', value[0][1]),
+      buildVector('x', 'z', value[0][2]),
+      buildVector('y', 'x', value[1][0]),
+      buildVector('y', 'y', value[1][1]),
+      buildVector('y', 'z', value[1][2]),
+      buildVector('z', 'x', value[2][0]),
+      buildVector('z', 'y', value[2][1]),
+      buildVector('z', 'z', value[2][2]),
+    ]
   }
 }

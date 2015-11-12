@@ -17,6 +17,19 @@
 .controls {
   width: 350px;
   padding: 10px 50px;
+
+  label {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 10px;
+    padding-left: 20px;
+
+    input {
+      position: absolute;
+      margin-top: 4px;
+      margin-left: -20px;
+    }
+  }
 }
 
 .visualization {

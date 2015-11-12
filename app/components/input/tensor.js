@@ -1,12 +1,29 @@
 import React, { Component } from 'react'
-import ScalarInput from './scalar-input'
-import styles from '../styles/input'
+import ScalarInput from './scalar'
+import styles from '../../styles/input'
 
 export default class TensorInput extends Component {
-  updateVector(changedIndex, newValue) {
-    this.props.onChange(this.props.value.map((value, index) => {
-      return index === changedIndex ? newValue : value
-    }))
+  updateVector(changedIndex, newVector) {
+    const value = this.props.value
+    let newValue
+
+    if (this.props.symmetric) {
+      newValue = value.map((vector, tensorIndex) => {
+        if (tensorIndex === changedIndex) {
+          return newVector
+        } else {
+          return vector.map((scalar, index) => {
+            return index === changedIndex ? newVector[tensorIndex] : vector[index]
+          })
+        }
+      })
+    } else {
+      newValue = value.map((vector, index) => {
+        return index === changedIndex ? newVector : vector
+      })
+    }
+
+    this.props.onChange(newValue)
   }
 
   updateScalar(value) {
@@ -36,3 +53,5 @@ export default class TensorInput extends Component {
 function orderFor(value) {
   return Array.isArray(value) ? orderFor(value[0]) + 1 : 0
 }
+
+TensorInput.defaultProps = { symmetric: false }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import styles from '../styles/input'
+import styles from '../../styles/input'
 
 export default class ScalarInput extends Component {
   updateValue(event) {

@@ -29,7 +29,7 @@ export default class Tensor extends Component {
   buildVectors() {
     const { value, size } = this.props
     const offset = size / 2
-    const magnitude = size * 5 / 8
+    const magnitude = size
     let eigenValues
 
     try {

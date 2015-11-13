@@ -13,21 +13,23 @@ class ArrowHelper extends Object3D {
 
   // The `quaternion` prop gets stomped on by this method with an empty default
   applyTHREEObject3DProps(oldProps, props) {
-    const lineWidth = 5
+    const lineWidth = 10
     const arrowHelper = this._THREEObject3D
-    const { scale, color, position } = props
+    const { magnitude, scale, invert, color } = props
     const { line, cone } = arrowHelper
+    let { position, direction } = props
+
+    if (invert) {
+      position = position.clone().addScaledVector(direction, scale * magnitude)
+      direction = direction.clone().negate()
+    }
 
     arrowHelper.position.copy(position)
+    arrowHelper.setDirection(direction)
+    arrowHelper.scale.set(scale, scale, scale)
 
-    if (scale > 0.001) {
-      line.material = new THREE.LineBasicMaterial({ color, linewidth: lineWidth * scale })
-      cone.material = new THREE.MeshPhongMaterial({ color, specular: 0x555555, shininess: 10 })
-      arrowHelper.scale.set(scale, scale, scale)
-    } else {
-      line.material = new THREE.LineBasicMaterial({ transparent: true, opacity: 0 })
-      cone.material = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 })
-    }
+    line.material = new THREE.LineBasicMaterial({ color, linewidth: lineWidth * scale })
+    cone.material = new THREE.MeshPhongMaterial({ color, specular: 0x555555, shininess: 10 })
   }
 }
 

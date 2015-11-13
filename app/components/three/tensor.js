@@ -44,11 +44,15 @@ export default class Tensor extends Component {
     const maxValue = Math.max(...numeric.abs(eigenValues.lambda.x))
 
     function buildVector(face, orientation, value) {
+      if (!value) {
+        return null
+      }
+
       const faceIndex = 'xyz'.indexOf(face)
       const orientationIndex = 'xyz'.indexOf(orientation)
       const direction = [ 0, 0, 0 ]
       const position = [ 0, 0, 0 ]
-      const scale = value / maxValue
+      const scale = Math.abs(value / maxValue)
       let color
 
       // The direction is the same for in-plane and normal vectors
@@ -68,6 +72,7 @@ export default class Tensor extends Component {
         key: face + orientation,
         direction: new THREE.Vector3(...direction),
         position: new THREE.Vector3(...position),
+        invert: value < 0,
         magnitude,
         scale,
         color,
@@ -84,6 +89,6 @@ export default class Tensor extends Component {
       buildVector('z', 'x', value[2][0]),
       buildVector('z', 'y', value[2][1]),
       buildVector('z', 'z', value[2][2]),
-    ]
+    ].filter((props) => props)
   }
 }

@@ -1,23 +1,27 @@
 import React, { Component } from 'react'
 import { Object3D } from 'react-three'
-import THREE from 'three'
+import { Vector3 } from 'three'
 import numeric from 'numeric'
 import Cube from './cube'
 import Vector from './vector'
 import colors from '../../constants/colors'
 
 export default class Tensor extends Component {
+  constructor(props, context) {
+    super(props, context)
+  }
+
   render() {
-    const { size } = this.props
+    const { size, quaternion } = this.props
     const vectorProps = this.buildVectors()
     const cubeProps = {
-      position: new THREE.Vector3(0, 0, 0),
+      position: new Vector3(0, 0, 0),
       size: size,
       color: colors.tensor,
     }
 
     return (
-      <Object3D>
+      <Object3D quaternion={quaternion}>
         <Cube {...cubeProps} />
         {vectorProps.map((props) => {
           return <Vector key={props.key} {...props} />
@@ -70,8 +74,8 @@ export default class Tensor extends Component {
 
       return {
         key: face + orientation,
-        direction: new THREE.Vector3(...direction),
-        position: new THREE.Vector3(...position),
+        direction: new Vector3(...direction),
+        position: new Vector3(...position),
         invert: value < 0,
         magnitude,
         scale,

@@ -4,11 +4,6 @@
   margin: 20px auto;
   max-width: 1300px;
 
-  :before {
-    content: '';
-    display: table;
-  }
-
   > div {
     box-sizing: border-box;
   }
@@ -36,7 +31,7 @@
   height: 100%;
   padding: 1px;
 
-  > div {
+  div {
     height: 100%;
   }
 }

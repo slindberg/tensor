@@ -6,6 +6,8 @@ import Cube from './cube'
 import Vector from './vector'
 import colors from '../../constants/colors'
 
+const axes = [ 'X', 'Y', 'Z' ]
+
 export default class Tensor extends Component {
   constructor(props, context) {
     super(props, context)
@@ -47,33 +49,32 @@ export default class Tensor extends Component {
     // Scale the vectors by the largest principle value
     const maxValue = Math.max(...numeric.abs(eigenValues.lambda.x))
 
-    function buildVector(face, orientation, value) {
+    function buildVector(faceIndex, orientationIndex, value, opposite) {
       if (!value) {
         return null
       }
 
-      const faceIndex = 'xyz'.indexOf(face)
-      const orientationIndex = 'xyz'.indexOf(orientation)
       const direction = [ 0, 0, 0 ]
       const position = [ 0, 0, 0 ]
       const scale = Math.abs(value / maxValue)
+      const sign = opposite ? -1 : 1
       let color
 
       // The direction is the same for in-plane and normal vectors
-      direction[orientationIndex] = 1
+      direction[orientationIndex] = sign
 
       // But the position/color is different
-      if (face === orientation) {
-        position[orientationIndex] = offset
+      if (faceIndex === orientationIndex) {
+        position[orientationIndex] = sign * offset
         color = colors.normalVector
       } else {
-        position[faceIndex] = offset + offset * 0.15
-        position[orientationIndex] = -(magnitude * scale) / 2
+        position[faceIndex] = sign * (offset + offset * 0.15)
+        position[orientationIndex] = sign * -(magnitude * scale) / 2
         color = colors.inPlaneVector
       }
 
       return {
-        key: face + orientation,
+        key: axes[faceIndex] + axes[orientationIndex] + (opposite ? 'i' : ''),
         direction: new Vector3(...direction),
         position: new Vector3(...position),
         invert: value < 0,
@@ -83,16 +84,18 @@ export default class Tensor extends Component {
       }
     }
 
-    return [
-      buildVector('x', 'x', value[0][0]),
-      buildVector('x', 'y', value[0][1]),
-      buildVector('x', 'z', value[0][2]),
-      buildVector('y', 'x', value[1][0]),
-      buildVector('y', 'y', value[1][1]),
-      buildVector('y', 'z', value[1][2]),
-      buildVector('z', 'x', value[2][0]),
-      buildVector('z', 'y', value[2][1]),
-      buildVector('z', 'z', value[2][2]),
-    ].filter((props) => props)
+    const vectors = axes.reduce((result, _, faceIndex) => {
+      axes.forEach((_, orientationIndex) => {
+        // Primary vector
+        result.push(buildVector(faceIndex, orientationIndex, value[faceIndex][orientationIndex]))
+        // Equilibrium vector on opposite face
+        result.push(buildVector(faceIndex, orientationIndex, value[faceIndex][orientationIndex], true))
+      })
+
+      return result
+    }, [])
+
+    // Remove any nulls (zero vectors)
+    return vectors.filter((props) => props)
   }
 }

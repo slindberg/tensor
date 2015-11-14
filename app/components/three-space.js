@@ -6,12 +6,6 @@ import RotationControls from './three/rotation-controls'
 import Tensor from './three/tensor'
 import colors from '../constants/colors'
 
-const unitAxes = [
-  new Vector3(1, 0, 0),
-  new Vector3(0, 1, 0),
-  new Vector3(0, 0, 1),
-]
-
 const cameraPosition = new Vector3(400, 400, 600)
 
 export default class ThreeSpace extends Component {

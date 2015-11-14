@@ -1,22 +1,18 @@
 import React, { Component } from 'react'
 import TensorInput from './input/tensor'
 import ThreeSpace from './three-space'
+import transformTensor from '../utils/transform-tensor'
 import styles from '../styles/layout'
+import math from '../constants/math'
 
 export class App extends Component {
   constructor(props, context) {
     super(props, context)
 
-    const zeroMatrix = [
-      [ 0, 0, 0 ],
-      [ 0, 0, 0 ],
-      [ 0, 0, 0 ],
-    ]
-
     this.state = {
       isInputSymmetric: true,
-      inputTensor: zeroMatrix,
-      transformedTensor: zeroMatrix,
+      inputTensor: math.zeroMatrix,
+      transformedAxes: math.identityMatrix,
     }
   }
 
@@ -30,8 +26,14 @@ export class App extends Component {
     this.setState(this.state)
   }
 
+  updateAxes(value) {
+    this.state.transformedAxes = value
+    this.setState(this.state)
+  }
+
   render() {
-    const { inputTensor, transformedTensor, isInputSymmetric } = this.state
+    const { inputTensor, transformedAxes, isInputSymmetric } = this.state
+    const transformedTensor = transformTensor(inputTensor, transformedAxes)
 
     return (
       <div className={styles.container}>
@@ -46,7 +48,7 @@ export class App extends Component {
           <TensorInput value={transformedTensor} disabled={true} />
         </div>
         <div className={styles.visualization}>
-          <ThreeSpace tensor={inputTensor} />
+          <ThreeSpace tensor={transformedTensor} onChange={this.updateAxes.bind(this)}/>
         </div>
       </div>
     )

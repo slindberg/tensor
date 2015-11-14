@@ -7,6 +7,11 @@ import Tensor from './three/tensor'
 import colors from '../constants/colors'
 import scene from '../constants/scene'
 import geometry from '../constants/geometry'
+import math from '../constants/math'
+
+const unitNormals = math.identityMatrix.map((vector) => {
+  return new Vector3(...vector)
+})
 
 export default class ThreeSpace extends Component {
   constructor() {
@@ -24,6 +29,12 @@ export default class ThreeSpace extends Component {
   updateQuaternion(value) {
     this.state.quaternion = value
     this.setState(this.state)
+
+    const transformedAxes = unitNormals.map((axis) => {
+      return axis.clone().applyQuaternion(value).toArray()
+    })
+
+    this.props.onChange(transformedAxes)
   }
 
   render() {

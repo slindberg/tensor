@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Object3D } from 'react-three'
 import { Vector3 } from 'three'
-import numeric from 'numeric'
 import Cube from './cube'
 import Vector from './vector'
 import colors from '../../constants/colors'
@@ -33,21 +32,12 @@ export default class Tensor extends Component {
   }
 
   buildVectors() {
-    const { value, size } = this.props
+    const { value, principleValues, size } = this.props
     const offset = size / 2
     const magnitude = size
-    let eigenValues
-
-    try {
-      eigenValues = numeric.eig(value)
-    } catch (error) {
-      console.debug('Invalid tensor, cannot find eigenvalues')
-
-      return []
-    }
-
-    // Scale the vectors by the largest principle value
-    const maxValue = Math.max(...numeric.abs(eigenValues.lambda.x))
+    const maxValue = principleValues.reduce((max, value) => {
+      return Math.max(max, Math.abs(value))
+    }, 0)
 
     function buildVector(faceIndex, orientationIndex, value, opposite) {
       if (!value) {

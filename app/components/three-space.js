@@ -39,7 +39,7 @@ export default class ThreeSpace extends Component {
 
   render() {
     const { quaternion } = this.state
-    const { tensor } = this.props
+    const { tensor, principleValues } = this.props
     const { width, height } = this.state.dimensions
     const size = Math.min(width, height)
     const controlProps = {
@@ -66,6 +66,7 @@ export default class ThreeSpace extends Component {
     }
     const tensorProps = {
       value: tensor,
+      principleValues,
       position: new Vector3(...geometry.tensorPosition),
       size: geometry.tensorSize,
       quaternion: quaternion,

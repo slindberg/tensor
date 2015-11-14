@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import TensorInput from './input/tensor'
 import ThreeSpace from './three-space'
 import transformTensor from '../utils/transform-tensor'
+import eigenValues from '../utils/eigen-values'
 import styles from '../styles/layout'
 import math from '../constants/math'
 
@@ -34,6 +35,7 @@ export class App extends Component {
   render() {
     const { inputTensor, transformedAxes, isInputSymmetric } = this.state
     const transformedTensor = transformTensor(inputTensor, transformedAxes)
+    const principleValues = eigenValues(inputTensor)
 
     return (
       <div className={styles.container}>
@@ -44,11 +46,13 @@ export class App extends Component {
             Symmetric
           </label>
           <TensorInput value={inputTensor} symmetric={isInputSymmetric} onChange={this.updateTensor.bind(this)} />
+          <h3>Priciple Values</h3>
+          <TensorInput value={principleValues} disabled={true} />
           <h3>Transformed</h3>
           <TensorInput value={transformedTensor} disabled={true} />
         </div>
         <div className={styles.visualization}>
-          <ThreeSpace tensor={transformedTensor} onChange={this.updateAxes.bind(this)}/>
+          <ThreeSpace tensor={transformedTensor} principleValues={principleValues} onChange={this.updateAxes.bind(this)}/>
         </div>
       </div>
     )

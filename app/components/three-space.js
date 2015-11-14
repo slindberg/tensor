@@ -5,8 +5,8 @@ import Measure from 'react-measure'
 import RotationControls from './three/rotation-controls'
 import Tensor from './three/tensor'
 import colors from '../constants/colors'
-
-const cameraPosition = new Vector3(400, 400, 600)
+import scene from '../constants/scene'
+import geometry from '../constants/geometry'
 
 export default class ThreeSpace extends Component {
   constructor() {
@@ -31,10 +31,7 @@ export default class ThreeSpace extends Component {
     const { tensor } = this.props
     const { width, height } = this.state.dimensions
     const size = Math.min(width, height)
-    const axisSize = 500
-    const tensorSize = 300
     const controlProps = {
-      cameraPosition,
       quaternion,
     }
     const sceneProps = {
@@ -45,20 +42,21 @@ export default class ThreeSpace extends Component {
     }
     const cameraProps = {
       name: 'maincamera',
-      fov: 75,
-      aspect: 1,
-      near: 1,
-      far: 1500,
-      position: cameraPosition,
-      lookat: new Vector3(0, 0, 0),
+      fov: scene.fieldOfView,
+      aspect: scene.aspectRatio,
+      near: scene.cameraRange[0],
+      far: scene.cameraRange[1],
+      position: new Vector3(...scene.cameraPosition),
+      lookat: new Vector3(...scene.lookAtPosition),
     }
     const lightProps = {
-      intensity: 0.7,
-      position: new Vector3(17, 9, 30),
+      intensity: scene.lightIntensity,
+      position: new Vector3(...scene.lightPosition),
     }
     const tensorProps = {
       value: tensor,
-      size: tensorSize,
+      position: new Vector3(...geometry.tensorPosition),
+      size: geometry.tensorSize,
       quaternion: quaternion,
     }
 
@@ -71,7 +69,7 @@ export default class ThreeSpace extends Component {
             <PerspectiveCamera {...cameraProps} />
             <AmbientLight color={colors.ambientLight} />
             <DirectionalLight color={colors.directionalLight} {...lightProps} />
-            <AxisHelper size={axisSize} />
+            <AxisHelper size={geometry.axisSize} />
             <Tensor {...tensorProps} />
           </Scene>
         </RotationControls>

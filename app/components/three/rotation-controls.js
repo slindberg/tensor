@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 import { Vector2, Vector3, Quaternion } from 'three'
+import scene from '../../constants/scene'
 
 export default class RotationControls extends Component {
   constructor(props, context) {
     super(props, context)
-
-    const { cameraPosition } = this.props
 
     this.isRotating = false
 
@@ -17,8 +16,8 @@ export default class RotationControls extends Component {
     }
 
     this.directions = {
-      eye: cameraPosition.clone().normalize(),
-      up: new Vector3(0, 1, 0),
+      eye: new Vector3(...scene.cameraPosition).normalize(),
+      up: new Vector3(...scene.upDirection),
       move: new Vector2(),
     }
 

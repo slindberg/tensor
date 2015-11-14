@@ -14,11 +14,11 @@ export default class Tensor extends Component {
   }
 
   render() {
-    const { size, quaternion } = this.props
+    const { position, size, quaternion } = this.props
     const vectorProps = this.buildVectors()
     const cubeProps = {
-      position: new Vector3(0, 0, 0),
-      size: size,
+      position,
+      size,
       color: colors.tensor,
     }
 
@@ -68,7 +68,7 @@ export default class Tensor extends Component {
         position[orientationIndex] = sign * offset
         color = colors.normalVector
       } else {
-        position[faceIndex] = sign * (offset + offset * 0.15)
+        position[faceIndex] = sign * offset * 1.15
         position[orientationIndex] = sign * -(magnitude * scale) / 2
         color = colors.inPlaneVector
       }

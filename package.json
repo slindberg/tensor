@@ -2,10 +2,14 @@
   "name": "tensor",
   "version": "0.1.0",
   "description": "An app for helping to visualize tensors in physical space",
-  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/slindberg/tensor.git"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server"
+    "start": "node server",
+    "build": "NODE_ENV=production webpack -p"
   },
   "author": "Steven Lindberg",
   "license": "MIT",

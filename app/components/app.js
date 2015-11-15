@@ -46,6 +46,11 @@ export class App extends Component {
     this.setState(this.state)
   }
 
+  resetTensor() {
+    this.state.inputTensor = math.zeroMatrix
+    this.setState(this.state)
+  }
+
   render() {
     const { inputTensor, transformedAxes, isInputSymmetric } = this.state
     const transformedTensor = transformTensor(inputTensor, transformedAxes)
@@ -59,6 +64,7 @@ export class App extends Component {
             <input type="checkbox" checked={isInputSymmetric} onChange={(event) => this.updateInputSymmetry(event.target.checked)} />
             Symmetric
           </label>
+          <button onClick={this.resetTensor.bind(this)}>clear</button>
           <TensorInput value={inputTensor} symmetric={isInputSymmetric} onChange={this.updateTensor.bind(this)} />
           <h3>Priciple Values</h3>
           <TensorInput value={principleValues} disabled={true} />

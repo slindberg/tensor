@@ -10,9 +10,20 @@ export class App extends Component {
   constructor(props, context) {
     super(props, context)
 
+    const serializedTensor = localStorage.inputTensor
+    let inputTensor
+
+    if (serializedTensor) {
+      try {
+        inputTensor = JSON.parse(serializedTensor)
+      } catch(error) {
+        console.debug('Failed to deserialized tensor: ' + serializedTensor)
+      }
+    }
+
     this.state = {
       isInputSymmetric: true,
-      inputTensor: math.zeroMatrix,
+      inputTensor: inputTensor || math.zeroMatrix,
       transformedAxes: math.identityMatrix,
     }
   }
@@ -20,6 +31,9 @@ export class App extends Component {
   updateTensor(value) {
     this.state.inputTensor = value
     this.setState(this.state)
+
+    // Save the tensor state to persist across reloads
+    localStorage.inputTensor = JSON.stringify(value)
   }
 
   updateInputSymmetry(value) {

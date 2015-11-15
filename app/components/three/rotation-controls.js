@@ -70,9 +70,11 @@ export default class RotationControls extends Component {
     if (moveDistance) {
       const angle = moveDistance * this.rotateSpeed
 
-      // Find true rotation axis using camera direction and up direction
       axes.xRotation.crossVectors(directions.eye, directions.up)
-      axes.yRotation.crossVectors(axes.xRotation, directions.eye)
+      axes.yRotation.copy(directions.up)
+
+      axes.xRotation.applyQuaternion(quaternion.conjugate())
+      axes.yRotation.applyQuaternion(quaternion.conjugate())
 
       axes.xRotation.multiplyScalar(-directions.move.y)
       axes.yRotation.multiplyScalar(directions.move.x)
@@ -81,7 +83,9 @@ export default class RotationControls extends Component {
 
       this.rotationQuaternion.setFromAxisAngle(axes.combinedRotation, angle)
 
-      this.props.onChange(quaternion.multiply(this.rotationQuaternion))
+      quaternion.multiply(this.rotationQuaternion)
+
+      this.props.onChange(quaternion)
     }
   }
 

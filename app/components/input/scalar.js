@@ -1,32 +1,26 @@
 import React, { Component } from 'react'
+import NumberInput from 'react-number-input'
 import styles from '../../styles/input'
 
 export default class ScalarInput extends Component {
   updateValue(valueStr) {
     let value = +valueStr
 
-    // This means the user is entering a negative
-    if (/0?-$/.test(valueStr)) {
-      value = -0
-    } else if (isNaN(value)) {
-      value = 0
-    }
-
     this.props.onChange(value)
+  }
+
+  selectText(input) {
+    input.setSelectionRange(0, input.value.length)
   }
 
   render() {
     let { value, disabled } = this.props
 
-    // Preserve the negative sign
-    if (1 / value === -Infinity) {
-      value = '-0'
-    }
-
     return (
       <div className={styles.scalar}>
-        <input type="text" value={value} disabled={disabled}
-          onChange={(event) => this.updateValue(event.target.value)} />
+        <NumberInput type="text" value={value} disabled={disabled}
+          onChange={(event) => this.updateValue(event.target.value)}
+          onFocus={(event) => this.selectText(event.target)} />
       </div>
     )
   }

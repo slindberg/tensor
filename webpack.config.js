@@ -27,7 +27,7 @@ module.exports = {
       {
         test: /\.js$/,
         loaders: [ 'babel' ],
-        include: dir('app'),
+        include: [ dir('app'), /node_modules\/react-.*/ ],
       },
       {
         test: /\.scss$/,

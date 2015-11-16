@@ -70,7 +70,7 @@ export default class RotationControls extends Component {
     if (moveDirection.length()) {
       const newRotations = availableRotations.map(({ name, axis }) => {
         var currentRotation = currentRotations.find((rotation) => {
-          return axis === rotation.axis
+          return name === rotation.name
         })
 
         let angle = currentRotation ? currentRotation.angle : 0
@@ -81,7 +81,7 @@ export default class RotationControls extends Component {
           angle += -moveDirection.y * rotateSpeed
         }
 
-        return { axis, angle }
+        return { name, axis, angle }
       })
 
       this.props.onChange(newRotations)

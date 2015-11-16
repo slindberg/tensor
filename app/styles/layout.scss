@@ -7,6 +7,10 @@
   > div {
     box-sizing: border-box;
   }
+
+  h3 button {
+    margin-left: 15px;
+  }
 }
 
 .controls {
@@ -22,10 +26,6 @@
       position: absolute;
       margin-top: 4px;
       margin-left: -20px;
-    }
-
-    + button {
-      margin-left: 15px;
     }
   }
 }

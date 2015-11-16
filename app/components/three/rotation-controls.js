@@ -1,6 +1,22 @@
 import React, { Component } from 'react'
-import { Vector2, Vector3, Quaternion } from 'three'
+import { Vector2, Vector3 } from 'three'
 import scene from '../../constants/scene'
+
+const directions = {
+  eye: new Vector3(...scene.cameraPosition).normalize(),
+  up: new Vector3(...scene.upDirection),
+}
+
+const availableRotations = [
+  {
+    name: 'EX',
+    axis: new Vector3().crossVectors(directions.eye, directions.up).normalize().toArray(),
+  },
+  {
+    name: 'Y',
+    axis: directions.up.toArray(),
+  },
+]
 
 export default class RotationControls extends Component {
   constructor(props, context) {
@@ -10,34 +26,19 @@ export default class RotationControls extends Component {
 
     this.rotateSpeed = 0.01
 
-    this.positions = {
-      current: new Vector2(),
-      previous: new Vector2(),
-    }
-
-    this.directions = {
-      eye: new Vector3(...scene.cameraPosition).normalize(),
-      up: new Vector3(...scene.upDirection),
-      move: new Vector2(),
-    }
-
-    this.axes = {
-      xRotation: new Vector3(),
-      yRotation: new Vector3(),
-      combinedRotation: new Vector3(),
-    }
-
-    this.rotationQuaternion = new Quaternion()
+    this.currentPosition = new Vector2(),
+    this.previousPosition = new Vector2(),
+    this.moveDirection = new Vector2()
   }
 
   handleMouseDown(event) {
     const { pageX, pageY } = event
-    const { current, previous } = this.positions
+    const { currentPosition, previousPosition } = this
 
     this.isRotating = true
 
-    current.set(pageX, pageY)
-    previous.copy(current)
+    currentPosition.set(pageX, pageY)
+    previousPosition.copy(currentPosition)
   }
 
   handleMouseUp() {
@@ -51,41 +52,39 @@ export default class RotationControls extends Component {
   handleMouseMove(event) {
     if (this.isRotating) {
       const { pageX, pageY } = event
-      const { current, previous } = this.positions
+      const { currentPosition, previousPosition } = this
 
-      previous.copy(current)
-      current.set(pageX, pageY)
+      previousPosition.copy(currentPosition)
+      currentPosition.set(pageX, pageY)
 
-      this.calculateRotation()
+      this.updateRotations()
     }
   }
 
-  calculateRotation() {
-    const { quaternion } = this.props
-    const { positions, directions, axes } = this
+  updateRotations() {
+    const currentRotations = this.props.rotations
+    const { currentPosition, previousPosition, moveDirection, rotateSpeed } = this
 
-    directions.move.subVectors(positions.current, positions.previous)
-    const moveDistance = directions.move.length()
+    moveDirection.subVectors(currentPosition, previousPosition)
 
-    if (moveDistance) {
-      const angle = moveDistance * this.rotateSpeed
+    if (moveDirection.length()) {
+      const newRotations = availableRotations.map(({ name, axis }) => {
+        var currentRotation = currentRotations.find((rotation) => {
+          return axis === rotation.axis
+        })
 
-      axes.xRotation.crossVectors(directions.eye, directions.up)
-      axes.yRotation.copy(directions.up)
+        let angle = currentRotation ? currentRotation.angle : 0
 
-      axes.xRotation.applyQuaternion(quaternion.conjugate())
-      axes.yRotation.applyQuaternion(quaternion.conjugate())
+        if (name === 'Y') {
+          angle += moveDirection.x * rotateSpeed
+        } else if (name === 'EX') {
+          angle += -moveDirection.y * rotateSpeed
+        }
 
-      axes.xRotation.multiplyScalar(-directions.move.y)
-      axes.yRotation.multiplyScalar(directions.move.x)
+        return { axis, angle }
+      })
 
-      axes.combinedRotation.addVectors(axes.xRotation, axes.yRotation).normalize()
-
-      this.rotationQuaternion.setFromAxisAngle(axes.combinedRotation, angle)
-
-      quaternion.multiply(this.rotationQuaternion)
-
-      this.props.onChange(quaternion)
+      this.props.onChange(newRotations)
     }
   }
 

@@ -4,14 +4,10 @@ import { Vector3, Quaternion } from 'three'
 import Measure from 'react-measure'
 import RotationControls from './three/rotation-controls'
 import Tensor from './three/tensor'
+import buildQuaternion from '../utils/build-quaternion'
 import colors from '../constants/colors'
 import scene from '../constants/scene'
 import geometry from '../constants/geometry'
-import math from '../constants/math'
-
-const unitNormals = math.identityMatrix.map((vector) => {
-  return new Vector3(...vector)
-})
 
 export default class ThreeSpace extends Component {
   constructor() {
@@ -22,28 +18,22 @@ export default class ThreeSpace extends Component {
         width: 0,
         height: 0,
       },
-      quaternion: new Quaternion(),
     }
   }
 
-  updateQuaternion(value) {
+  updateRotations(value) {
     this.state.quaternion = value
     this.setState(this.state)
 
-    const transformedAxes = unitNormals.map((axis) => {
-      return axis.clone().applyQuaternion(value).toArray()
-    })
-
-    this.props.onChange(transformedAxes)
+    this.props.onChange(value)
   }
 
   render() {
-    const { quaternion } = this.state
-    const { tensor, principleValues } = this.props
+    const { tensor, principleValues, rotations } = this.props
     const { width, height } = this.state.dimensions
     const size = Math.min(width, height)
     const controlProps = {
-      quaternion,
+      rotations,
     }
     const sceneProps = {
       width: size,
@@ -69,14 +59,14 @@ export default class ThreeSpace extends Component {
       principleValues,
       position: new Vector3(...geometry.tensorPosition),
       size: geometry.tensorSize,
-      quaternion: quaternion,
+      quaternion: new Quaternion(...buildQuaternion(rotations)),
     }
 
     return (
       <Measure
         whitelist={[ 'width', 'height' ]}
         onMeasure={(dimensions) => { this.setState({ dimensions })}}>
-        <RotationControls onChange={this.updateQuaternion.bind(this)} {...controlProps}>
+        <RotationControls onChange={this.updateRotations.bind(this)} {...controlProps}>
           <Scene {...sceneProps}>
             <PerspectiveCamera {...cameraProps} />
             <AmbientLight color={colors.ambientLight} />

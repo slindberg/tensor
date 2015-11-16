@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import TensorInput from './input/tensor'
 import ThreeSpace from './three-space'
 import update from 'react-addons-update'
+import { loadState, storeState } from '../utils/storage'
 import buildQuaternion from '../utils/build-quaternion'
 import rotateAxes from '../utils/rotate-axes'
 import transformTensor from '../utils/transform-tensor'
@@ -13,7 +14,7 @@ export class App extends Component {
   constructor(props, context) {
     super(props, context)
 
-    const loadedState = this.loadState()
+    const loadedState = loadState()
 
     this.state = update({
       isInputSymmetric: true,
@@ -36,30 +37,10 @@ export class App extends Component {
   }
 
   setState(state) {
-    // Whenever the state changes, update the stored version as well
-    this.storeState(state)
+    // Save the tensor state to persist across reloads
+    storeState(state)
 
     super.setState(state)
-  }
-
-  storeState(state) {
-    // Save the tensor state to persist across reloads
-    localStorage.tensor = JSON.stringify(state)
-  }
-
-  loadState() {
-    const serializedState = localStorage.tensor
-    let state
-
-    if (serializedState) {
-      try {
-        state = JSON.parse(serializedState)
-      } catch(error) {
-        console.debug(`Failed to deserialized state: ${serializedState}`)
-      }
-    }
-
-    return state
   }
 
   render() {

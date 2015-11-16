@@ -22,9 +22,6 @@ export default class ThreeSpace extends Component {
   }
 
   updateRotations(value) {
-    this.state.quaternion = value
-    this.setState(this.state)
-
     this.props.onChange(value)
   }
 

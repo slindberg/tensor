@@ -24,9 +24,7 @@ export default class Tensor extends Component {
     return (
       <Object3D quaternion={quaternion}>
         <Cube {...cubeProps} />
-        {vectorProps.map((props) => {
-          return <Vector key={props.key} {...props} />
-        })}
+        {vectorProps.map(props => <Vector key={props.key} {...props} />)}
       </Object3D>
     )
   }

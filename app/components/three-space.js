@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { PerspectiveCamera, AmbientLight, DirectionalLight, AxisHelper } from 'react-three'
 import { Vector3, Matrix3, Matrix4, Quaternion } from 'three'
 import { Dispatcher } from 'flux'
@@ -6,10 +6,18 @@ import Measure from 'react-measure'
 import PointerEventScene from './three/pointer-event-scene'
 import RotationControls from './three/rotation-controls'
 import Tensor from './three/tensor'
+import { matrixType, vectorType } from '../utils/prop-types'
 import restructureMatrix from '../utils/restructure-matrix'
 import colors from '../constants/colors'
 import scene from '../constants/scene'
 import geometry from '../constants/geometry'
+
+const propTypes = {
+  onRotate: PropTypes.func.isRequired,
+  tensor: matrixType,
+  principleValues: vectorType,
+  rotationMatrix: matrixType,
+}
 
 export default class ThreeSpace extends Component {
   constructor() {
@@ -40,7 +48,7 @@ export default class ThreeSpace extends Component {
     // Create a structured matrix from the flat array that THREE uses
     const structuredMatrix = restructureMatrix(normalMatrix.toArray())
 
-    this.props.onChange(structuredMatrix)
+    this.props.onRotate(structuredMatrix)
   }
 
   render() {
@@ -101,10 +109,12 @@ export default class ThreeSpace extends Component {
             <DirectionalLight color={colors.directionalLight} {...lightProps} />
             <AxisHelper size={geometry.axisSize} />
             <Tensor {...tensorProps} />
-            <RotationControls onChange={this.updateRotation.bind(this)} {...controlProps}/>
+            <RotationControls onRotate={this.updateRotation.bind(this)} {...controlProps}/>
           </PointerEventScene>
         </div>
       </Measure>
     )
   }
 }
+
+ThreeSpace.propTypes = propTypes

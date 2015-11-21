@@ -1,6 +1,7 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { Object3D, Mesh } from 'react-three'
 import THREE, { Vector2, Vector3, Matrix4, Quaternion, Raycaster } from 'three'
+import { Dispatcher } from 'flux'
 import scene from '../../constants/scene'
 import geometry from '../../constants/geometry'
 import colors from '../../constants/colors'
@@ -54,6 +55,11 @@ function createPlaneMaterial(planeName, isVisible) {
   return new THREE.MeshBasicMaterial(options)
 }
 
+const propTypes = {
+  cameraName: PropTypes.string.isRequired,
+  rotation: PropTypes.instanceOf(Matrix4).isRequired,
+  dispatcher: PropTypes.instanceOf(Dispatcher).isRequired,
+}
 
 export default class RotationControls extends Component {
   constructor(props, context) {
@@ -169,7 +175,7 @@ export default class RotationControls extends Component {
 
     referenceQuaternion.multiply(deltaQuaternion)
 
-    this.props.onChange(referenceQuaternion)
+    this.props.onRotate(referenceQuaternion)
   }
 
   angleForPlane(planeName) {
@@ -209,3 +215,5 @@ export default class RotationControls extends Component {
     )
   }
 }
+
+RotationControls.propTypes = propTypes

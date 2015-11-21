@@ -1,11 +1,20 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { Object3D } from 'react-three'
-import { Vector3 } from 'three'
+import { Vector3, Quaternion } from 'three'
+import { matrixType, vectorType } from '../../utils/prop-types'
 import Cube from './cube'
 import Vector from './vector'
 import colors from '../../constants/colors'
 
 const axes = [ 'X', 'Y', 'Z' ]
+
+const propTypes = {
+  value: matrixType,
+  principleValues: vectorType,
+  size: PropTypes.number.isRequired,
+  position: PropTypes.instanceOf(Vector3).isRequired,
+  quaternion: PropTypes.instanceOf(Quaternion).isRequired,
+}
 
 export default class Tensor extends Component {
   constructor(props, context) {
@@ -87,3 +96,5 @@ export default class Tensor extends Component {
     return vectors.filter((props) => props)
   }
 }
+
+Tensor.propTypes = propTypes

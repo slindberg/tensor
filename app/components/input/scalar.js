@@ -1,6 +1,11 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import NumberInput from 'react-number-input'
 import styles from '../../styles/input'
+
+const propTypes = {
+  onChange: PropTypes.func,
+  value: PropTypes.number.isRequired,
+}
 
 export default class ScalarInput extends Component {
   updateValue(valueStr) {
@@ -25,3 +30,5 @@ export default class ScalarInput extends Component {
     )
   }
 }
+
+ScalarInput.propTypes = propTypes

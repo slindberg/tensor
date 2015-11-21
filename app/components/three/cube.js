@@ -1,6 +1,12 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { Mesh } from 'react-three'
-import THREE from 'three'
+import THREE, { Vector3 } from 'three'
+
+const propTypes = {
+  position: PropTypes.instanceOf(Vector3).isRequired,
+  size: PropTypes.number.isRequired,
+  color: PropTypes.number.isRequired,
+}
 
 export default class Cube extends Component {
   render() {
@@ -14,3 +20,5 @@ export default class Cube extends Component {
     return <Mesh {...meshProps} />
   }
 }
+
+Cube.propTypes = propTypes

@@ -74,7 +74,7 @@ export class App extends Component {
           <TensorInput value={transformedTensor} disabled={true} />
         </div>
         <div className={styles.visualization}>
-          <ThreeSpace onChange={value => this.setStateProp('rotationMatrix', value)} {...spaceProps} />
+          <ThreeSpace onRotate={value => this.setStateProp('rotationMatrix', value)} {...spaceProps} />
         </div>
       </div>
     )

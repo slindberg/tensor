@@ -1,13 +1,19 @@
 import ReactDOM from 'react-dom'
+import { PropTypes } from 'react'
 import { Scene } from 'react-three'
+import { Dispatcher } from 'flux'
 
 const pointerEvents = [
   'mouseDown',
   'mouseUp',
   'mouseMove',
   'moustIn',
-  'mouseOut'
+  'mouseOut',
 ]
+
+const propTypes = {
+  dispatcher: PropTypes.instanceOf(Dispatcher).isRequired,
+}
 
 export default class PointerEventScene extends Scene {
   constructor(props, context) {
@@ -63,3 +69,5 @@ export default class PointerEventScene extends Scene {
     return [ x, y ]
   }
 }
+
+PointerEventScene.propTypes = propTypes

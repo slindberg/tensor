@@ -1,6 +1,19 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { Object3D } from 'react-three'
-import THREE from 'three'
+import THREE, { Vector3 } from 'three'
+
+const propTypes = {
+  position: PropTypes.instanceOf(Vector3).isRequired,
+  direction: PropTypes.instanceOf(Vector3).isRequired,
+  invert: PropTypes.bool,
+  magnitude: PropTypes.number.isRequired,
+  scale: PropTypes.number.isRequired,
+  color: PropTypes.number.isRequired,
+}
+
+const defaultProps = {
+  invert: false,
+}
 
 class ArrowHelper extends Object3D {
   createTHREEObject() {
@@ -38,3 +51,6 @@ export default class Vector extends Component {
     return <ArrowHelper {...this.props} />
   }
 }
+
+Vector.propTypes = propTypes
+Vector.defaultProps = defaultProps

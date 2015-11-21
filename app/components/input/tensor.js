@@ -1,6 +1,21 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import ScalarInput from './scalar'
 import styles from '../../styles/input'
+
+const propTypes = {
+  onChange: PropTypes.func,
+  value: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.number,
+  ]).isRequired,
+  disabled: PropTypes.bool,
+  symmetric: PropTypes.bool,
+}
+
+const defaultProps = {
+  disabled: false,
+  symmetric: false,
+}
 
 export default class TensorInput extends Component {
   updateVector(changedIndex, newVector) {
@@ -54,4 +69,5 @@ function orderFor(value) {
   return Array.isArray(value) ? orderFor(value[0]) + 1 : 0
 }
 
-TensorInput.defaultProps = { symmetric: false }
+TensorInput.defaultProps = defaultProps
+TensorInput.propTypes = propTypes

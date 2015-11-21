@@ -1,4 +1,5 @@
 export default {
+  decimalPrecision: 4,
   zeroMatrix: [
     [ 0, 0, 0 ],
     [ 0, 0, 0 ],

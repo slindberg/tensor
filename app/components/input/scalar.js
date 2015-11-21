@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import NumberInput from 'react-number-input'
 import styles from '../../styles/input'
+import math from '../../constants/math'
 
 const propTypes = {
   onChange: PropTypes.func,
@@ -19,13 +20,19 @@ export default class ScalarInput extends Component {
   }
 
   render() {
-    let { value, disabled } = this.props
+    const { value, disabled } = this.props
+    const inputProps = {
+      type: 'text',
+      format: `0,0[.][${'0'.repeat(math.decimalPrecision)}]`,
+      value,
+      disabled,
+    }
 
     return (
       <div className={styles.scalar}>
-        <NumberInput type="text" value={value} disabled={disabled}
-          onChange={(event) => this.updateValue(event.target.value)}
-          onFocus={(event) => this.selectText(event.target)} />
+        <NumberInput {...inputProps}
+          onChange={event => this.updateValue(event.target.value)}
+          onFocus={event => this.selectText(event.target)} />
       </div>
     )
   }

@@ -6,8 +6,10 @@ import Measure from 'react-measure'
 import PointerEventScene from './three/pointer-event-scene'
 import RotationControls from './three/rotation-controls'
 import Tensor from './three/tensor'
+import update from 'react-addons-update'
 import { matrixType, vectorType } from '../utils/prop-types'
 import restructureMatrix from '../utils/restructure-matrix'
+import styles from '../styles/visualization'
 import colors from '../constants/colors'
 import scene from '../constants/scene'
 import geometry from '../constants/geometry'
@@ -29,12 +31,19 @@ export default class ThreeSpace extends Component {
         height: 0,
       },
       cameraPosition: new Vector3(...scene.cameraPosition),
+      isRotating: false,
       dispatcher: new Dispatcher(),
     }
 
     this.normalMatrix = new Matrix3()
     this.rotationMatrix = new Matrix4()
     this.quaternion = new Quaternion()
+  }
+
+  updateIsRotating(isRotating) {
+    this.setState(update(this.state, {
+      isRotating: { '$set': isRotating }
+    }))
   }
 
   updateRotation(quaternion) {
@@ -54,7 +63,7 @@ export default class ThreeSpace extends Component {
 
   render() {
     const { tensor, principleValues, rotationMatrix } = this.props
-    const { dimensions, cameraPosition, dispatcher } = this.state
+    const { dimensions, cameraPosition, isRotating, dispatcher } = this.state
     const { width, height } = dimensions
     const size = Math.min(width, height)
 
@@ -104,14 +113,16 @@ export default class ThreeSpace extends Component {
       <Measure
         whitelist={[ 'width', 'height' ]}
         onMeasure={(dimensions) => { this.setState({ dimensions })}}>
-        <div>
+        <div className={isRotating ? styles.rotating : styles.static }>
           <PointerEventScene {...sceneProps}>
             <PerspectiveCamera {...cameraProps} />
             <AmbientLight color={colors.ambientLight} />
             <DirectionalLight color={colors.directionalLight} {...lightProps} />
             <AxisHelper size={geometry.axisSize} />
             <Tensor {...tensorProps} />
-            <RotationControls onRotate={this.updateRotation.bind(this)} {...controlProps}/>
+            <RotationControls {...controlProps}
+              onRotate={this.updateRotation.bind(this)}
+              onIsRotating={this.updateIsRotating.bind(this)} />
           </PointerEventScene>
         </div>
       </Measure>

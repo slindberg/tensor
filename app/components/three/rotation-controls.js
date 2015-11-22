@@ -92,6 +92,8 @@ export default class RotationControls extends Component {
     if (this.isRotating) {
       this.updateRotation()
     }
+
+    this.props.onIsRotating(this.isRotating)
   }
 
   setActivePlane(activePlane) {

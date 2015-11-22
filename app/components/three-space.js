@@ -28,6 +28,7 @@ export default class ThreeSpace extends Component {
         width: 0,
         height: 0,
       },
+      cameraPosition: new Vector3(...scene.cameraPosition),
       dispatcher: new Dispatcher(),
     }
 
@@ -53,7 +54,7 @@ export default class ThreeSpace extends Component {
 
   render() {
     const { tensor, principleValues, rotationMatrix } = this.props
-    const { dimensions, dispatcher } = this.state
+    const { dimensions, cameraPosition, dispatcher } = this.state
     const { width, height } = dimensions
     const size = Math.min(width, height)
 
@@ -67,6 +68,7 @@ export default class ThreeSpace extends Component {
 
     const controlProps = {
       cameraName: 'maincamera',
+      cameraPosition,
       rotation: this.rotationMatrix,
       dispatcher,
     }
@@ -83,7 +85,7 @@ export default class ThreeSpace extends Component {
       aspect: scene.aspectRatio,
       near: scene.cameraRange[0],
       far: scene.cameraRange[1],
-      position: new Vector3(...scene.cameraPosition),
+      position: cameraPosition,
       lookat: new Vector3(...scene.lookAtPosition),
     }
     const lightProps = {

@@ -7,4 +7,5 @@ export default {
   upDirection: [ 0, 1, 0 ],
   lightPosition: [ 17, 9, 30 ],
   lightIntensity: 0.7,
+  planeOpacity: 0.1,
 }

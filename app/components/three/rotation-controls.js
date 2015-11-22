@@ -1,62 +1,32 @@
 import React, { Component, PropTypes } from 'react'
 import { Object3D, Mesh } from 'react-three'
-import THREE, { Vector2, Vector3, Matrix4, Quaternion, Raycaster } from 'three'
+import { Vector2, Vector3, Matrix4, Quaternion, Raycaster } from 'three'
 import { Dispatcher } from 'flux'
+import { createCircleGeometry, createMaterial } from '../../utils/three'
+import PickerPlanes from './picker-planes'
+import componentAngles from '../../utils/component-angles'
 import scene from '../../constants/scene'
 import geometry from '../../constants/geometry'
 import colors from '../../constants/colors'
 
-const planeNames = [ 'X', 'Y', 'Z' ]
-
-const unitAxes = {
-  X: new Vector3(1, 0, 0),
-  Y: new Vector3(0, 1, 0),
-  Z: new Vector3(0, 0, 1),
-}
-
-const complementaryDirections = {
-  X: [ 'z', 'y' ],
-  Y: [ 'x', 'z' ],
-  Z: [ 'y', 'x' ],
-}
-
-const planeSize = scene.cameraRange[1]
-const planeGeometry = new THREE.PlaneBufferGeometry(planeSize, planeSize)
-
-const planeQuaternions = {
-  X: new Quaternion().setFromEuler(new THREE.Euler(0, Math.PI / 2, 0)),
-  Y: new Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0)),
-  Z: new Quaternion(),
-}
-
-const planeColors = {
-  X: colors.xAxis,
-  Y: colors.yAxis,
-  Z: colors.zAxis,
-}
-
-function createPlaneMaterial(planeName, isVisible) {
-  let options
-
-  if (isVisible) {
-    options = {
-      color: planeColors[planeName],
-      transparent: true,
-      opacity: 0.05,
-      side: THREE.DoubleSide,
-    }
-  } else {
-    options = {
-      visible: false,
-      side: THREE.DoubleSide,
-    }
-  }
-
-  return new THREE.MeshBasicMaterial(options)
+const planes = {
+  X: {
+    color: colors.xAxis,
+    normal: new Vector3(1, 0, 0),
+  },
+  Y: {
+    color: colors.yAxis,
+    normal: new Vector3(0, 1, 0),
+  },
+  Z: {
+    color: colors.zAxis,
+    normal: new Vector3(0, 0, 1),
+  },
 }
 
 const propTypes = {
   cameraName: PropTypes.string.isRequired,
+  cameraPosition: PropTypes.instanceOf(Vector3).isRequired,
   rotation: PropTypes.instanceOf(Matrix4).isRequired,
   dispatcher: PropTypes.instanceOf(Dispatcher).isRequired,
 }
@@ -76,11 +46,14 @@ export default class RotationControls extends Component {
     this.raycaster = new Raycaster()
     this.referenceQuaternion = new Quaternion()
     this.deltaQuaternion = new Quaternion()
+    this.eyeAxis = new Vector3()
 
     // Internal state
     this.referenceRotation = new Matrix4()
     this.referencePosition = new Vector3()
     this.offsetPosition = new Vector3()
+    this.offsetAngles = new Vector3()
+    this.moveDirection  = new Vector3()
 
     props.dispatcher.register(payload => this.handlePointerEvent(payload))
   }
@@ -140,24 +113,24 @@ export default class RotationControls extends Component {
   }
 
   setPlaneOffset(pointer) {
+    const { referencePosition, offsetPosition, offsetAngles, moveDirection } = this
     const { activePlane } = this.state
     const intersection = this.findIntersection(pointer, activePlane)
 
     if (intersection) {
-      this.offsetPosition.copy(intersection.point)
+      offsetPosition.copy(intersection.point)
+      offsetAngles.subVectors(componentAngles(referencePosition), componentAngles(offsetPosition))
+      moveDirection.subVectors(offsetPosition, referencePosition)
     }
   }
 
   findIntersection(coordinates, planeName) {
     const { raycaster } = this
     const camera = this.getCamera()
-    let { object } = this.refs
+    const objectName = planeName || 'pickers'
+    const object = this.refs.object.getObjectByName(objectName)
 
     raycaster.setFromCamera(coordinates, camera)
-
-    if (planeName) {
-      object = this.refs[planeName]
-    }
 
     const intersections = raycaster.intersectObject(object, true)
 
@@ -165,10 +138,18 @@ export default class RotationControls extends Component {
   }
 
   updateRotation() {
-    const { referenceQuaternion, deltaQuaternion } = this
+    const { referenceQuaternion, deltaQuaternion, offsetAngles, moveDirection, eyeAxis } = this
+    const { cameraPosition } = this.props
     const { activePlane } = this.state
-    const angle = this.angleForPlane(activePlane)
-    const axis = unitAxes[activePlane]
+    let axis, angle
+
+    if (activePlane === 'E') {
+      axis = eyeAxis.crossVectors(moveDirection, cameraPosition).normalize()
+      angle = offsetAngles.length()
+    } else {
+      axis = planes[activePlane].normal
+      angle = offsetAngles[activePlane.toLowerCase()]
+    }
 
     referenceQuaternion.setFromRotationMatrix(this.referenceRotation)
     deltaQuaternion.setFromAxisAngle(axis, angle)
@@ -178,39 +159,28 @@ export default class RotationControls extends Component {
     this.props.onRotate(referenceQuaternion)
   }
 
-  angleForPlane(planeName) {
-    const { referencePosition, offsetPosition } = this
-    const [ dir1, dir2 ] = complementaryDirections[planeName]
-    const offsetAngle = Math.atan2(offsetPosition[dir1], offsetPosition[dir2])
-    const referenceAngle = Math.atan2(referencePosition[dir1], referencePosition[dir2])
-
-    return referenceAngle - offsetAngle
-  }
-
   render() {
     const { activePlane } = this.state
-    const pickerPlaneProps = planeNames.map((name) => {
-      return {
-        name,
-        geometry: planeGeometry,
-        material: createPlaneMaterial(name, false),
-        quaternion: planeQuaternions[name],
+    const { cameraPosition } = this.props
+    const planeNames = Object.keys(planes)
+    let activePlaneObject
+
+    if (~planeNames.indexOf(activePlane)) {
+      const activePlaneProps = {
+        position: new Vector3(0, 0, 0),
+        geometry: createCircleGeometry(geometry.visualPlaneRadius),
+        material: createMaterial(planes[activePlane].color, scene.planeOpacity),
       }
-    })
-    const visualPlaneProps = planeNames.map((name) => {
-      return {
-        name: name + '_visual',
-        geometry: planeGeometry,
-        material: createPlaneMaterial(name, name === activePlane),
-        quaternion: planeQuaternions[name],
-        scale: geometry.visualPlaneScale,
-      }
-    })
+
+      activePlaneProps.geometry.lookAt(planes[activePlane].normal)
+
+      activePlaneObject = <Mesh {...activePlaneProps} />
+    }
 
     return (
       <Object3D ref="object">
-        {pickerPlaneProps.map(props => <Mesh key={props.name} ref={props.name} {...props} />)}
-        {visualPlaneProps.map(props => <Mesh key={props.name} {...props} />)}
+        <PickerPlanes ref="pickers" cameraPosition={cameraPosition} />
+        {activePlaneObject}
       </Object3D>
     )
   }

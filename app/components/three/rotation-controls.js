@@ -4,25 +4,11 @@ import { Vector2, Vector3, Matrix4, Quaternion, Raycaster } from 'three'
 import { Dispatcher } from 'flux'
 import { createCircleGeometry, createMaterial } from '../../utils/three'
 import PickerPlanes from './picker-planes'
+import { unitNormalMap } from '../../utils/unit-normals'
 import componentAngles from '../../utils/component-angles'
 import scene from '../../constants/scene'
 import geometry from '../../constants/geometry'
 import colors from '../../constants/colors'
-
-const planes = {
-  X: {
-    color: colors.xAxis,
-    normal: new Vector3(1, 0, 0),
-  },
-  Y: {
-    color: colors.yAxis,
-    normal: new Vector3(0, 1, 0),
-  },
-  Z: {
-    color: colors.zAxis,
-    normal: new Vector3(0, 0, 1),
-  },
-}
 
 const propTypes = {
   cameraName: PropTypes.string.isRequired,
@@ -35,11 +21,10 @@ export default class RotationControls extends Component {
   constructor(props, context) {
     super(props, context)
 
+    // Changing the active plane is the only thing that should trigger a rerender
     this.state = {
       activePlane: null,
     }
-
-    this.isRotating = false
 
     // Reusable THREE objects
     this.pointerPosition = new Vector2()
@@ -47,8 +32,10 @@ export default class RotationControls extends Component {
     this.referenceQuaternion = new Quaternion()
     this.deltaQuaternion = new Quaternion()
     this.eyeAxis = new Vector3()
+    this.unitNormals = unitNormalMap()
 
     // Internal state
+    this.isRotating = false
     this.referenceRotation = new Matrix4()
     this.referencePosition = new Vector3()
     this.offsetPosition = new Vector3()
@@ -58,11 +45,19 @@ export default class RotationControls extends Component {
     props.dispatcher.register(payload => this.handlePointerEvent(payload))
   }
 
-  getCamera() {
+  getScene() {
     const { object } = this.refs
+
+    function findRoot(object) {
+      return object.parent ? findRoot(object.parent) : object
+    }
+
+    return findRoot(object)
+  }
+
+  getCamera() {
     const { cameraName } = this.props
-    // This is super brittle, but there are limited options
-    const scene = object.parent
+    const scene = this.getScene()
 
     return scene.getObjectByName(cameraName, true)
   }
@@ -127,8 +122,12 @@ export default class RotationControls extends Component {
   findIntersection(coordinates, planeName) {
     const { raycaster } = this
     const camera = this.getCamera()
-    const objectName = planeName || 'pickers'
-    const object = this.refs.object.getObjectByName(objectName)
+    const objectName = planeName ? 'planes' : 'pickers'
+    let object = this.refs.object.getObjectByName(objectName)
+
+    if (planeName) {
+      object = object.getObjectByName(planeName)
+    }
 
     raycaster.setFromCamera(coordinates, camera)
 
@@ -138,7 +137,7 @@ export default class RotationControls extends Component {
   }
 
   updateRotation() {
-    const { referenceQuaternion, deltaQuaternion, offsetAngles, moveDirection, eyeAxis } = this
+    const { unitNormals, offsetAngles, moveDirection, eyeAxis, referenceQuaternion, deltaQuaternion } = this
     const { cameraPosition } = this.props
     const { activePlane } = this.state
     let axis, angle
@@ -147,7 +146,7 @@ export default class RotationControls extends Component {
       axis = eyeAxis.crossVectors(moveDirection, cameraPosition).normalize()
       angle = offsetAngles.length()
     } else {
-      axis = planes[activePlane].normal
+      axis = unitNormals[activePlane]
       angle = offsetAngles[activePlane.toLowerCase()]
     }
 
@@ -160,19 +159,18 @@ export default class RotationControls extends Component {
   }
 
   render() {
+    const { unitNormals } = this
     const { activePlane } = this.state
     const { cameraPosition } = this.props
-    const planeNames = Object.keys(planes)
     let activePlaneObject
 
-    if (~planeNames.indexOf(activePlane)) {
+    // Only display the active plane for axis normals
+    if (~'XYZ'.indexOf(activePlane)) {
       const activePlaneProps = {
         position: new Vector3(0, 0, 0),
-        geometry: createCircleGeometry(geometry.visualPlaneRadius),
-        material: createMaterial(planes[activePlane].color, scene.planeOpacity),
+        geometry: createCircleGeometry(geometry.visualPlaneRadius, unitNormals[activePlane]),
+        material: createMaterial(colors.axis[activePlane], scene.planeOpacity),
       }
-
-      activePlaneProps.geometry.lookAt(planes[activePlane].normal)
 
       activePlaneObject = <Mesh {...activePlaneProps} />
     }

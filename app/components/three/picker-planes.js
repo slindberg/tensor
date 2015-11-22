@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react'
 import { Object3D, Mesh } from 'react-three'
 import { Vector3 } from 'three'
 import { createPlaneGeometry, createCircleGeometry, createInvisibleMaterial } from '../../utils/three'
+import update from 'react-addons-update'
+import unitNormals from '../../utils/unit-normals'
 import scene from '../../constants/scene'
 import geometry from '../../constants/geometry'
 
@@ -12,44 +14,71 @@ const propTypes = {
 }
 
 export default class PickerPlanes extends Component {
+  constructor(props, context) {
+    super(props, context)
+
+    this.originPosition = new Vector3()
+    this.eyePlanePosition = new Vector3()
+    this.eyePlaneNormal = new Vector3()
+    this.unitNormals = unitNormals()
+  }
+
   render() {
+    const { originPosition, eyePlanePosition, eyePlaneNormal, unitNormals } = this
     const { cameraPosition } = this.props
-    const planeProps = [
+
+    const planes = [
       {
         name: 'X',
-        position: new Vector3(0, 0, 0),
-        normal: new Vector3(1, 0, 0),
-        geometry: createPlaneGeometry(planeSize),
-        material: createInvisibleMaterial(),
+        position: originPosition,
+        normal: unitNormals[0],
       },
       {
         name: 'Y',
-        position: new Vector3(0, 0, 0),
-        normal: new Vector3(0, 1, 0),
-        geometry: createPlaneGeometry(planeSize),
-        material: createInvisibleMaterial(),
+        position: originPosition,
+        normal: unitNormals[1],
       },
       {
         name: 'Z',
-        position: new Vector3(0, 0, 0),
-        normal: new Vector3(0, 0, 1),
-        geometry: createPlaneGeometry(planeSize),
-        material: createInvisibleMaterial(),
+        position: originPosition,
+        normal: unitNormals[2]
       },
       {
         name: 'E',
-        position: new Vector3().copy(cameraPosition).setLength(geometry.eyePickerDistance),
-        normal: new Vector3().copy(cameraPosition).normalize(),
-        geometry: createCircleGeometry(geometry.eyePickerRadius),
-        material: createInvisibleMaterial(),
+        position: eyePlanePosition.copy(cameraPosition).setLength(geometry.eyePickerDistance),
+        normal: eyePlaneNormal.copy(cameraPosition).normalize(),
       },
     ]
 
-    planeProps.forEach(({ geometry, normal }) => geometry.lookAt(normal))
+    // These planes are used to find the intersection with a given plane
+    const planeProps = planes.map((plane) => {
+      return update(plane, {
+        geometry: { '$set': createPlaneGeometry(planeSize, plane.normal) },
+        material: { '$set': createInvisibleMaterial() },
+      })
+    })
+
+    // These objects are used to actually pick a plane, so geometry is important
+    const pickerProps = planeProps.map((props) => {
+      // For the free-rotation plane use a circle centered in the field of view
+      if (props.name === 'E') {
+        return update(props, {
+          geometry: { '$set': createCircleGeometry(geometry.eyePickerRadius, props.normal) },
+        })
+      }
+
+      // The normal planes work for picking since they overlap each other
+      return props
+    })
 
     return (
-      <Object3D name="pickers">
-        {planeProps.map(props => <Mesh key={props.name} {...props} />)}
+      <Object3D>
+        <Object3D name="planes">
+          {planeProps.map(props => <Mesh key={props.name} {...props} />)}
+        </Object3D>
+        <Object3D name="pickers">
+          {pickerProps.map(props => <Mesh key={props.name} {...props} />)}
+        </Object3D>
       </Object3D>
     )
   }

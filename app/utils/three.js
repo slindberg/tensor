@@ -1,11 +1,19 @@
 import THREE from 'three'
 
-export function createPlaneGeometry(size) {
-  return new THREE.PlaneGeometry(size, size)
+function rotateGeometry(geometry, normal) {
+  if (normal) {
+    geometry.lookAt(normal)
+  }
+
+  return geometry
 }
 
-export function createCircleGeometry(radius) {
-  return new THREE.CircleGeometry(radius, 64)
+export function createPlaneGeometry(size, normal) {
+  return rotateGeometry(new THREE.PlaneGeometry(size, size), normal)
+}
+
+export function createCircleGeometry(radius, normal) {
+  return rotateGeometry(new THREE.CircleGeometry(radius, 64), normal)
 }
 
 export function createMaterial(color, opacity) {

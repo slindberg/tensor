@@ -3,8 +3,7 @@ import TensorInput from './input/tensor'
 import ThreeSpace from './three-space'
 import update from 'react-addons-update'
 import { loadState, storeState } from '../utils/storage'
-import rotateAxes from '../utils/rotate-axes'
-import transformTensor from '../utils/transform-tensor'
+import rotateTensor from '../utils/rotate-tensor'
 import eigenValues from '../utils/eigen-values'
 import styles from '../styles/layout'
 import math from '../constants/math'
@@ -44,8 +43,7 @@ export class App extends Component {
 
   render() {
     const { inputTensor, rotationMatrix, isInputSymmetric } = this.state
-    const rotatedAxes = rotateAxes(math.identityMatrix, rotationMatrix)
-    const transformedTensor = transformTensor(inputTensor, rotatedAxes)
+    const transformedTensor = rotateTensor(inputTensor, rotationMatrix)
     const principleValues = eigenValues(inputTensor)
     const spaceProps = {
       tensor: transformedTensor,

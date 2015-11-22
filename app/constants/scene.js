@@ -8,4 +8,5 @@ export default {
   lightPosition: [ 17, 9, 30 ],
   lightIntensity: 0.7,
   planeOpacity: 0.1,
+  rotationThreshold: 0.001,
 }

@@ -84,7 +84,9 @@ export default class RotationControls extends Component {
         this.isRotating = true
       }
 
-      this.setPlaneOffset(pointerPosition)
+      if (this.isRotating) {
+        this.setOffsetPoint(pointerPosition)
+      }
     }
 
     if (this.isRotating) {
@@ -92,22 +94,28 @@ export default class RotationControls extends Component {
     }
   }
 
-  setReferencePoint(pointer) {
-    const intersection = this.findIntersection(pointer)
-
-    if (intersection) {
-      this.referencePosition.copy(intersection.point)
-      this.referenceRotation.getInverse(this.props.rotation)
-
-      this.setActivePlane(intersection.object.name)
-    }
-  }
-
   setActivePlane(activePlane) {
     this.setState({ activePlane })
   }
 
-  setPlaneOffset(pointer) {
+  setReferencePosition(position) {
+    const { referencePosition, referenceRotation } = this
+
+    // When the reference position changes, capture the reference rotation as well
+    referencePosition.copy(position)
+    referenceRotation.getInverse(this.props.rotation)
+  }
+
+  setReferencePoint(pointer) {
+    const intersection = this.findIntersection(pointer)
+
+    if (intersection) {
+      this.setReferencePosition(intersection.point)
+      this.setActivePlane(intersection.object.name)
+    }
+  }
+
+  setOffsetPoint(pointer) {
     const { referencePosition, offsetPosition, offsetAngles, moveDirection } = this
     const { activePlane } = this.state
     const intersection = this.findIntersection(pointer, activePlane)
@@ -116,6 +124,12 @@ export default class RotationControls extends Component {
       offsetPosition.copy(intersection.point)
       offsetAngles.subVectors(componentAngles(referencePosition), componentAngles(offsetPosition))
       moveDirection.subVectors(offsetPosition, referencePosition)
+
+      // For free-rotation, treat individual movements as separate to allow
+      // rotation about the camera axis
+      if (activePlane === 'E') {
+        this.setReferencePosition(offsetPosition)
+      }
     }
   }
 
@@ -142,6 +156,7 @@ export default class RotationControls extends Component {
     const { activePlane } = this.state
     let axis, angle
 
+    // The free-rotation axis is dependent on the movement direction
     if (activePlane === 'E') {
       axis = eyeAxis.crossVectors(moveDirection, cameraPosition).normalize()
       angle = offsetAngles.length()
@@ -150,12 +165,15 @@ export default class RotationControls extends Component {
       angle = offsetAngles[activePlane.toLowerCase()]
     }
 
-    referenceQuaternion.setFromRotationMatrix(this.referenceRotation)
-    deltaQuaternion.setFromAxisAngle(axis, angle)
+    // Avoid infinitesmal rotations
+    if (Math.abs(angle) > scene.rotationThreshold) {
+      referenceQuaternion.setFromRotationMatrix(this.referenceRotation)
+      deltaQuaternion.setFromAxisAngle(axis, angle)
 
-    referenceQuaternion.multiply(deltaQuaternion)
+      referenceQuaternion.multiply(deltaQuaternion)
 
-    this.props.onRotate(referenceQuaternion)
+      this.props.onRotate(referenceQuaternion)
+    }
   }
 
   render() {

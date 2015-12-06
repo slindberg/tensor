@@ -4,7 +4,7 @@ import ThreeSpace from './three-space'
 import update from 'react-addons-update'
 import { loadState, storeState } from '../utils/storage'
 import rotateTensor from '../utils/rotate-tensor'
-import eigenValues from '../utils/eigen-values'
+import { eigenValues, eigenVectors } from '../utils/eigen'
 import styles from '../styles/layout'
 import math from '../constants/math'
 
@@ -68,6 +68,7 @@ export class App extends Component {
           <h3>
             Transformed
             <button onClick={() => this.setStateProp('rotationMatrix', math.identityMatrix)}>reset</button>
+            <button onClick={() => this.setStateProp('rotationMatrix', eigenVectors(inputTensor))}>principle axes</button>
           </h3>
           <TensorInput value={transformedTensor} disabled={true} />
         </div>

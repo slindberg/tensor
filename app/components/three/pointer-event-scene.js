@@ -1,7 +1,6 @@
 import ReactDOM from 'react-dom'
-import { PropTypes } from 'react'
 import { Scene } from 'react-three'
-import { Dispatcher } from 'flux'
+import eventDispatcher from '../../dispatchers/event'
 
 const pointerEvents = [
   'mouseDown',
@@ -10,10 +9,6 @@ const pointerEvents = [
   'moustIn',
   'mouseOut',
 ]
-
-const propTypes = {
-  dispatcher: PropTypes.instanceOf(Dispatcher).isRequired,
-}
 
 export default class PointerEventScene extends Scene {
   constructor(props, context) {
@@ -52,10 +47,11 @@ export default class PointerEventScene extends Scene {
     })
   }
 
-  handlePointerEvent(eventName, event) {
+  handlePointerEvent(name, event) {
+    const { target } = event
     const coordinates = this.getPointerCoordinates(event)
 
-    this.props.dispatcher.dispatch({ eventName, coordinates })
+    eventDispatcher.dispatch({ name, target, coordinates })
   }
 
   getPointerCoordinates(event) {
@@ -69,5 +65,3 @@ export default class PointerEventScene extends Scene {
     return [ x, y ]
   }
 }
-
-PointerEventScene.propTypes = propTypes

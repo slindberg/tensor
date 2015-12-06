@@ -1,11 +1,11 @@
 import React, { Component, PropTypes } from 'react'
 import { Object3D, Mesh } from 'react-three'
 import { Vector2, Vector3, Matrix4, Quaternion, Raycaster } from 'three'
-import { Dispatcher } from 'flux'
-import { createCircleGeometry, createMaterial } from '../../utils/three'
 import PickerPlanes from './picker-planes'
+import eventDispatcher from '../../dispatchers/event'
 import { unitNormalMap } from '../../utils/unit-normals'
 import componentAngles from '../../utils/component-angles'
+import { createCircleGeometry, createMaterial } from '../../utils/three'
 import scene from '../../constants/scene'
 import geometry from '../../constants/geometry'
 import colors from '../../constants/colors'
@@ -14,7 +14,6 @@ const propTypes = {
   cameraName: PropTypes.string.isRequired,
   cameraPosition: PropTypes.instanceOf(Vector3).isRequired,
   rotation: PropTypes.instanceOf(Matrix4).isRequired,
-  dispatcher: PropTypes.instanceOf(Dispatcher).isRequired,
 }
 
 export default class RotationControls extends Component {
@@ -42,7 +41,7 @@ export default class RotationControls extends Component {
     this.offsetAngles = new Vector3()
     this.moveDirection  = new Vector3()
 
-    props.dispatcher.register(payload => this.handlePointerEvent(payload))
+    eventDispatcher.register(payload => this.handleEvent(payload))
   }
 
   getScene() {
@@ -62,15 +61,22 @@ export default class RotationControls extends Component {
     return scene.getObjectByName(cameraName, true)
   }
 
+  handleEvent(event) {
+    if (event.name.indexOf('mouse') === 0) {
+      // TODO: validate that the event came from the parent scene/canvas
+      this.handlePointerEvent(event)
+    }
+  }
+
   handlePointerEvent(event) {
-    const { eventName, coordinates } = event
+    const { name, coordinates } = event
     const { pointerPosition } = this
 
     pointerPosition.set(...coordinates)
 
-    if (eventName === 'mouseUp' || eventName === 'mouseOut') {
+    if (name === 'mouseUp' || name === 'mouseOut') {
       this.isRotating = false
-      if (eventName === 'mouseOut') {
+      if (name === 'mouseOut') {
         this.setActivePlane(null)
       } else {
         this.setReferencePoint(pointerPosition)
@@ -80,7 +86,7 @@ export default class RotationControls extends Component {
         this.setReferencePoint(pointerPosition)
       }
 
-      if (eventName === 'mouseDown') {
+      if (name === 'mouseDown') {
         this.isRotating = true
       }
 

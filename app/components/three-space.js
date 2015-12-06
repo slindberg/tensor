@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { PerspectiveCamera, AmbientLight, DirectionalLight, AxisHelper } from 'react-three'
 import { Vector3, Matrix3, Matrix4, Quaternion } from 'three'
-import { Dispatcher } from 'flux'
 import Measure from 'react-measure'
 import PointerEventScene from './three/pointer-event-scene'
 import RotationControls from './three/rotation-controls'
@@ -32,7 +31,6 @@ export default class ThreeSpace extends Component {
       },
       cameraPosition: new Vector3(...scene.cameraPosition),
       isRotating: false,
-      dispatcher: new Dispatcher(),
     }
 
     this.normalMatrix = new Matrix3()
@@ -42,7 +40,7 @@ export default class ThreeSpace extends Component {
 
   updateIsRotating(isRotating) {
     this.setState(update(this.state, {
-      isRotating: { '$set': isRotating }
+      isRotating: { '$set': isRotating },
     }))
   }
 
@@ -63,7 +61,7 @@ export default class ThreeSpace extends Component {
 
   render() {
     const { tensor, principleValues, rotationMatrix } = this.props
-    const { dimensions, cameraPosition, isRotating, dispatcher } = this.state
+    const { dimensions, cameraPosition, isRotating } = this.state
     const { width, height } = dimensions
     const size = Math.min(width, height)
 
@@ -79,14 +77,12 @@ export default class ThreeSpace extends Component {
       cameraName: 'maincamera',
       cameraPosition,
       rotation: this.rotationMatrix,
-      dispatcher,
     }
     const sceneProps = {
       width: size,
       height: size,
       transparent: true,
       camera: 'maincamera',
-      dispatcher,
     }
     const cameraProps = {
       name: 'maincamera',

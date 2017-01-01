@@ -2,47 +2,31 @@
   "name": "tensor",
   "version": "0.1.0",
   "description": "An app for helping to visualize tensors in physical space",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/slindberg/tensor.git"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server",
-    "build": "NODE_ENV=production webpack -p"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
   },
   "author": "Steven Lindberg",
   "license": "MIT",
   "devDependencies": {
-    "babel-core": "^5.8.0",
-    "babel-eslint": "^4.1.3",
-    "babel-loader": "^5.1.1",
-    "babel-plugin-react-transform": "^1.1.1",
-    "css-loader": "^0.22.0",
-    "eslint": "^1.8.0",
-    "eslint-plugin-react": "^3.6.3",
-    "express": "^4.13.3",
-    "extract-text-webpack-plugin": "^0.9.1",
-    "flux": "^2.1.1",
-    "html-webpack-plugin": "^1.6.2",
-    "node-sass": "^3.4.1",
-    "numeric": "^1.2.6",
-    "react": "^0.14.2",
-    "react-addons-update": "^0.14.2",
-    "react-dom": "^0.14.2",
-    "react-measure": "^0.3.2",
-    "react-three": "^0.7.3",
-    "react-transform-catch-errors": "^1.0.0",
-    "react-transform-hmr": "^1.0.1",
-    "redbox-react": "^1.1.1",
-    "sass-loader": "^3.1.1",
-    "style-loader": "^0.13.0",
-    "three": "^0.73.0",
-    "webpack": "^1.12.2",
-    "webpack-dev-middleware": "^1.2.0",
-    "webpack-hot-middleware": "^2.4.1"
+    "react-scripts": "0.8.4"
   },
   "dependencies": {
-    "react-number-input": "^1.14.7"
+    "flux": "^2.1.1",
+    "numeric": "^1.2.6",
+    "react": "^15.4.1",
+    "react-addons-update": "^15.4.1",
+    "react-dom": "^15.4.1",
+    "react-measure": "^1.4.5",
+    "react-number-input": "^15.0.0-rc2",
+    "react-three": "^0.9.6",
+    "three": "^0.74.0"
   }
 }

@@ -21,7 +21,7 @@ const propTypes = {
   rotationMatrix: matrixType,
 }
 
-export default class ThreeSpace extends Component {
+class ThreeSpace extends Component {
   constructor() {
     super()
 
@@ -137,3 +137,5 @@ export default class ThreeSpace extends Component {
 }
 
 ThreeSpace.propTypes = propTypes
+
+export default ThreeSpace

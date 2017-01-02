@@ -17,7 +17,7 @@ const defaultProps = {
   symmetric: false,
 }
 
-export default class TensorInput extends Component {
+class TensorInput extends Component {
   updateVector(changedIndex, newVector) {
     const value = this.props.value
     let newValue
@@ -71,3 +71,5 @@ function orderFor(value) {
 
 TensorInput.defaultProps = defaultProps
 TensorInput.propTypes = propTypes
+
+export default TensorInput

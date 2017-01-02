@@ -8,7 +8,7 @@ const propTypes = {
   value: PropTypes.number.isRequired,
 }
 
-export default class ScalarInput extends Component {
+class ScalarInput extends Component {
   updateValue(valueStr) {
     let value = +valueStr
 
@@ -39,3 +39,5 @@ export default class ScalarInput extends Component {
 }
 
 ScalarInput.propTypes = propTypes
+
+export default ScalarInput

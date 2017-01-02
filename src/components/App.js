@@ -8,7 +8,7 @@ import { eigenValues, eigenVectors } from '../utils/eigen'
 import { zeroMatrix, identityMatrix } from '../constants/math'
 import '../styles/layout.css'
 
-export class App extends Component {
+class App extends Component {
   constructor(props, context) {
     super(props, context)
 
@@ -79,3 +79,5 @@ export class App extends Component {
     )
   }
 }
+
+export default App

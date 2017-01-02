@@ -13,7 +13,7 @@ const propTypes = {
   cameraPosition: PropTypes.instanceOf(Vector3).isRequired,
 }
 
-export default class PickerPlanes extends Component {
+class PickerPlanes extends Component {
   constructor(props, context) {
     super(props, context)
 
@@ -85,3 +85,5 @@ export default class PickerPlanes extends Component {
 }
 
 PickerPlanes.propTypes = propTypes
+
+export default PickerPlanes

@@ -17,7 +17,7 @@ const propTypes = {
   dispatcher: PropTypes.instanceOf(Dispatcher).isRequired,
 }
 
-export default class RotationControls extends Component {
+class RotationControls extends Component {
   constructor(props, context) {
     super(props, context)
 
@@ -205,3 +205,5 @@ export default class RotationControls extends Component {
 }
 
 RotationControls.propTypes = propTypes
+
+export default RotationControls

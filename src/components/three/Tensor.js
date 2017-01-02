@@ -3,7 +3,7 @@ import { Object3D } from 'react-three'
 import { Vector3, Quaternion } from 'three'
 import { matrixType, vectorType } from '../../utils/prop-types'
 import Cube from './Cube'
-import Vector from './Vector'
+import ArrowHelper from './ArrowHelper'
 import colors from '../../constants/colors'
 
 const axes = [ 'X', 'Y', 'Z' ]
@@ -16,7 +16,7 @@ const propTypes = {
   quaternion: PropTypes.instanceOf(Quaternion).isRequired,
 }
 
-export default class Tensor extends Component {
+class Tensor extends Component {
   render() {
     const { position, size, quaternion } = this.props
     const vectorProps = this.buildVectors()
@@ -29,7 +29,7 @@ export default class Tensor extends Component {
     return (
       <Object3D quaternion={quaternion}>
         <Cube {...cubeProps} />
-        {vectorProps.map(props => <Vector key={props.key} {...props} />)}
+        {vectorProps.map(props => <ArrowHelper key={props.key} {...props} />)}
       </Object3D>
     )
   }
@@ -94,3 +94,5 @@ export default class Tensor extends Component {
 }
 
 Tensor.propTypes = propTypes
+
+export default Tensor

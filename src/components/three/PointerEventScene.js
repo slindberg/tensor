@@ -15,7 +15,7 @@ const propTypes = {
   dispatcher: PropTypes.instanceOf(Dispatcher).isRequired,
 }
 
-export default class PointerEventScene extends Scene {
+class PointerEventScene extends Scene {
   constructor(props, context) {
     super(props, context)
 
@@ -71,3 +71,5 @@ export default class PointerEventScene extends Scene {
 }
 
 PointerEventScene.propTypes = propTypes
+
+export default PointerEventScene

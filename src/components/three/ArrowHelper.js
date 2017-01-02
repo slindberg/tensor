@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react'
+import { PropTypes } from 'react'
 import { Object3D } from 'react-three'
 import THREE, { Vector3 } from 'three'
 
@@ -46,11 +46,7 @@ class ArrowHelper extends Object3D {
   }
 }
 
-export default class Vector extends Component {
-  render() {
-    return <ArrowHelper {...this.props} />
-  }
-}
+ArrowHelper.propTypes = propTypes
+ArrowHelper.defaultProps = defaultProps
 
-Vector.propTypes = propTypes
-Vector.defaultProps = defaultProps
+export default ArrowHelper

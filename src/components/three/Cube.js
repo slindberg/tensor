@@ -8,7 +8,7 @@ const propTypes = {
   color: PropTypes.number.isRequired,
 }
 
-export default class Cube extends Component {
+class Cube extends Component {
   render() {
     const { color, size, position } = this.props
     const meshProps = {
@@ -22,3 +22,5 @@ export default class Cube extends Component {
 }
 
 Cube.propTypes = propTypes
+
+export default Cube

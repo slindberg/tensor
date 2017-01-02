@@ -10,6 +10,6 @@ export function unitNormalMap() {
 
   return [ 'X', 'Y', 'Z' ].reduce((result, name, index) => {
     result[name] = normals[index]
-    return result;
+    return result
   }, {})
 }

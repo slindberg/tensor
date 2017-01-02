@@ -5,7 +5,7 @@ import update from 'react-addons-update'
 import { loadState, storeState } from '../utils/storage'
 import rotateTensor from '../utils/rotate-tensor'
 import { eigenValues, eigenVectors } from '../utils/eigen'
-import math from '../constants/math'
+import { zeroMatrix, identityMatrix } from '../constants/math'
 import '../styles/layout.css'
 
 export class App extends Component {
@@ -16,8 +16,8 @@ export class App extends Component {
 
     this.state = update({
       isInputSymmetric: true,
-      inputTensor: math.zeroMatrix,
-      rotationMatrix: math.identityMatrix,
+      inputTensor: zeroMatrix,
+      rotationMatrix: identityMatrix,
     }, {
       '$merge': loadedState || {},
     })
@@ -56,7 +56,7 @@ export class App extends Component {
         <div className="controls">
           <h3>
             Input
-            <button onClick={() => this.setStateProp('inputTensor', math.zeroMatrix)}>clear</button>
+            <button onClick={() => this.setStateProp('inputTensor', zeroMatrix)}>clear</button>
           </h3>
           <label>
             <input type="checkbox" checked={isInputSymmetric} onChange={event => this.setStateProp('isInputSymmetric', event.target.checked)} />
@@ -67,7 +67,7 @@ export class App extends Component {
           <TensorInput value={principleValues} disabled={true} />
           <h3>
             Transformed
-            <button onClick={() => this.setStateProp('rotationMatrix', math.identityMatrix)}>reset</button>
+            <button onClick={() => this.setStateProp('rotationMatrix', identityMatrix)}>reset</button>
             <button onClick={() => this.setStateProp('rotationMatrix', eigenVectors(inputTensor))}>principle axes</button>
           </h3>
           <TensorInput value={transformedTensor} disabled={true} />

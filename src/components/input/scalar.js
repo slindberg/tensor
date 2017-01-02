@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import NumberInput from 'react-number-input'
-import math from '../../constants/math'
+import { decimalPrecision } from '../../constants/math'
 import '../../styles/input.css'
 
 const propTypes = {
@@ -23,7 +23,7 @@ export default class ScalarInput extends Component {
     const { value, disabled } = this.props
     const inputProps = {
       type: 'text',
-      format: `0,0[.][${'0'.repeat(math.decimalPrecision)}]`,
+      format: `0,0[.][${'0'.repeat(decimalPrecision)}]`,
       value,
       disabled,
     }

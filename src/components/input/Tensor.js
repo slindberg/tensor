@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import ScalarInput from './scalar'
+import ScalarInput from './Scalar'
 import '../../styles/input.css'
 
 const propTypes = {

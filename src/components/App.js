@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import TensorInput from './input/tensor'
-import ThreeSpace from './three-space'
+import TensorInput from './input/Tensor'
+import ThreeSpace from './ThreeSpace'
 import update from 'react-addons-update'
 import { loadState, storeState } from '../utils/storage'
 import rotateTensor from '../utils/rotate-tensor'

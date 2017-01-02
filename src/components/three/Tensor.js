@@ -2,8 +2,8 @@ import React, { Component, PropTypes } from 'react'
 import { Object3D } from 'react-three'
 import { Vector3, Quaternion } from 'three'
 import { matrixType, vectorType } from '../../utils/prop-types'
-import Cube from './cube'
-import Vector from './vector'
+import Cube from './Cube'
+import Vector from './Vector'
 import colors from '../../constants/colors'
 
 const axes = [ 'X', 'Y', 'Z' ]

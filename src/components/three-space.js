@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { PerspectiveCamera, AmbientLight, DirectionalLight, AxisHelper } from 'react-three'
+import { Renderer, PerspectiveCamera, AmbientLight, DirectionalLight, AxisHelper } from 'react-three'
 import { Vector3, Matrix3, Matrix4, Quaternion } from 'three'
 import { Dispatcher } from 'flux'
 import Measure from 'react-measure'
@@ -81,10 +81,14 @@ export default class ThreeSpace extends Component {
       rotation: this.rotationMatrix,
       dispatcher,
     }
-    const sceneProps = {
+    const rendererProps = {
       width: size,
       height: size,
       transparent: true,
+    }
+    const sceneProps = {
+      width: size,
+      height: size,
       camera: 'maincamera',
       dispatcher,
     }
@@ -114,16 +118,18 @@ export default class ThreeSpace extends Component {
         whitelist={[ 'width', 'height' ]}
         onMeasure={(dimensions) => { this.setState({ dimensions })}}>
         <div className={isRotating ? 'rotating' : 'static' }>
-          <PointerEventScene {...sceneProps}>
-            <PerspectiveCamera {...cameraProps} />
-            <AmbientLight color={colors.ambientLight} />
-            <DirectionalLight color={colors.directionalLight} {...lightProps} />
-            <AxisHelper size={geometry.axisSize} />
-            <Tensor {...tensorProps} />
-            <RotationControls {...controlProps}
-              onRotate={this.updateRotation.bind(this)}
-              onIsRotating={this.updateIsRotating.bind(this)} />
-          </PointerEventScene>
+          <Renderer {...rendererProps}>
+            <PointerEventScene {...sceneProps}>
+              <PerspectiveCamera {...cameraProps} />
+              <AmbientLight color={colors.ambientLight} />
+              <DirectionalLight color={colors.directionalLight} {...lightProps} />
+              <AxisHelper size={geometry.axisSize} />
+              <Tensor {...tensorProps} />
+              <RotationControls {...controlProps}
+                onRotate={this.updateRotation.bind(this)}
+                onIsRotating={this.updateIsRotating.bind(this)} />
+            </PointerEventScene>
+          </Renderer>
         </div>
       </Measure>
     )

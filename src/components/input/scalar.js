@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import NumberInput from 'react-number-input'
-import styles from '../../styles/input'
 import math from '../../constants/math'
+import '../../styles/input.css'
 
 const propTypes = {
   onChange: PropTypes.func,
@@ -29,7 +29,7 @@ export default class ScalarInput extends Component {
     }
 
     return (
-      <div className={styles.scalar}>
+      <div className="scalar">
         <NumberInput {...inputProps}
           onChange={event => this.updateValue(event.target.value)}
           onFocus={event => this.selectText(event.target)} />

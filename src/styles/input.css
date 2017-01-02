@@ -1,0 +1,35 @@
+.vector > div {
+  display: inline-block;
+}
+
+.tensor {
+  width: calc(3 * 80px);
+  padding: 8px;
+  border: 2px solid #555;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  border-radius: 10px/40px;
+}
+
+.scalar input {
+  box-sizing: border-box;
+  height: 26px;
+  width: calc(80px - 4px);
+  margin: 1px 2px;
+  padding: 2px 5px;
+  font-size: 15px;
+  line-height: 20px;
+  vertical-align: middle;
+  border-radius: 2px;
+  background: #fff;
+  border: 1px solid #ccc;
+  box-shadow: inset 0 1px 1px;
+}
+
+.scalar input :focus {
+  box-shadow: 0 0 3pt 2pt #4285f4;
+}
+
+.scalar input[disabled] {
+  background: #eee;
+}

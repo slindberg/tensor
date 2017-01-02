@@ -9,10 +9,10 @@ import Tensor from './three/tensor'
 import update from 'react-addons-update'
 import { matrixType, vectorType } from '../utils/prop-types'
 import restructureMatrix from '../utils/restructure-matrix'
-import styles from '../styles/visualization'
 import colors from '../constants/colors'
 import scene from '../constants/scene'
 import geometry from '../constants/geometry'
+import '../styles/visualization.css'
 
 const propTypes = {
   onRotate: PropTypes.func.isRequired,
@@ -113,7 +113,7 @@ export default class ThreeSpace extends Component {
       <Measure
         whitelist={[ 'width', 'height' ]}
         onMeasure={(dimensions) => { this.setState({ dimensions })}}>
-        <div className={isRotating ? styles.rotating : styles.static }>
+        <div className={isRotating ? 'rotating' : 'static' }>
           <PointerEventScene {...sceneProps}>
             <PerspectiveCamera {...cameraProps} />
             <AmbientLight color={colors.ambientLight} />

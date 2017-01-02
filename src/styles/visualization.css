@@ -1,0 +1,9 @@
+.static canvas {
+  cursor: -webkit-grab;
+  cursor: grab;
+}
+
+.rotating canvas {
+  cursor: -webkit-grabbing;
+  cursor: grabbing;
+}

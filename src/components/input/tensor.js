@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import ScalarInput from './scalar'
-import styles from '../../styles/input'
+import '../../styles/input.css'
 
 const propTypes = {
   onChange: PropTypes.func,
@@ -51,7 +51,7 @@ export default class TensorInput extends Component {
 
     if (order > 0) {
       return (
-        <div className={order > 1 ? styles.tensor : styles.vector}>
+        <div className={order > 1 ? 'tensor' : 'vector'}>
           {value.map((value, index) =>
             <TensorInput key={index} value={value} disabled={disabled} onChange={this.updateVector.bind(this, index)} />
           )}

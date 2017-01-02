@@ -5,8 +5,8 @@ import update from 'react-addons-update'
 import { loadState, storeState } from '../utils/storage'
 import rotateTensor from '../utils/rotate-tensor'
 import { eigenValues, eigenVectors } from '../utils/eigen'
-import styles from '../styles/layout'
 import math from '../constants/math'
+import '../styles/layout.css'
 
 export class App extends Component {
   constructor(props, context) {
@@ -52,8 +52,8 @@ export class App extends Component {
     }
 
     return (
-      <div className={styles.container}>
-        <div className={styles.controls}>
+      <div className="container">
+        <div className="controls">
           <h3>
             Input
             <button onClick={() => this.setStateProp('inputTensor', math.zeroMatrix)}>clear</button>
@@ -72,7 +72,7 @@ export class App extends Component {
           </h3>
           <TensorInput value={transformedTensor} disabled={true} />
         </div>
-        <div className={styles.visualization}>
+        <div className="visualization">
           <ThreeSpace onRotate={value => this.setStateProp('rotationMatrix', value)} {...spaceProps} />
         </div>
       </div>

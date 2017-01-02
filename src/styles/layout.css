@@ -1,0 +1,41 @@
+.container {
+  display: flex;
+  height: 100%;
+  margin: 0 auto;
+  max-width: 1300px;
+}
+
+.container > div {
+    box-sizing: border-box;
+}
+
+.container h3 button {
+  margin-left: 15px;
+}
+
+.controls {
+  padding: 10px 50px;
+}
+
+.controls label {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 10px;
+  padding-left: 20px;
+}
+
+.controls input[type="checkbox"] {
+  position: absolute;
+  margin-top: 4px;
+  margin-left: -20px;
+}
+
+.visualization {
+  flex: 1;
+  height: 100%;
+  padding: 1px;
+}
+
+.visualization div {
+  height: 100%;
+}

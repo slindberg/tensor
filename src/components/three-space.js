@@ -42,7 +42,7 @@ export default class ThreeSpace extends Component {
 
   updateIsRotating(isRotating) {
     this.setState(update(this.state, {
-      isRotating: { '$set': isRotating }
+      isRotating: { '$set': isRotating },
     }))
   }
 

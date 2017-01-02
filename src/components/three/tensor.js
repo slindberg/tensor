@@ -17,10 +17,6 @@ const propTypes = {
 }
 
 export default class Tensor extends Component {
-  constructor(props, context) {
-    super(props, context)
-  }
-
   render() {
     const { position, size, quaternion } = this.props
     const vectorProps = this.buildVectors()

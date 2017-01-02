@@ -41,7 +41,7 @@ export default class PickerPlanes extends Component {
       {
         name: 'Z',
         position: originPosition,
-        normal: unitNormals[2]
+        normal: unitNormals[2],
       },
       {
         name: 'E',

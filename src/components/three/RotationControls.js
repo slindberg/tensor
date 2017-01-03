@@ -3,7 +3,6 @@ import { Object3D, Mesh } from 'react-three'
 import { Vector2, Vector3, Matrix4, Quaternion, Raycaster } from 'three'
 import { Dispatcher } from 'flux'
 import { createCircleGeometry, createMaterial } from '../../utils/three'
-import PickerPlanes from './PickerPlanes'
 import { unitNormalMap } from '../../utils/unit-normals'
 import componentAngles from '../../utils/component-angles'
 import scene from '../../constants/scene'
@@ -17,7 +16,7 @@ const propTypes = {
   dispatcher: PropTypes.instanceOf(Dispatcher).isRequired,
 }
 
-class RotationControls extends Component {
+export default class RotationControls extends Component {
   constructor(props, context) {
     super(props, context)
 
@@ -181,7 +180,6 @@ class RotationControls extends Component {
   render() {
     const { unitNormals } = this
     const { activePlane } = this.state
-    const { cameraPosition } = this.props
     let activePlaneObject
 
     // Only display the active plane for axis normals
@@ -197,7 +195,6 @@ class RotationControls extends Component {
 
     return (
       <Object3D ref="object">
-        <PickerPlanes ref="pickers" cameraPosition={cameraPosition} />
         {activePlaneObject}
       </Object3D>
     )
@@ -205,5 +202,3 @@ class RotationControls extends Component {
 }
 
 RotationControls.propTypes = propTypes
-
-export default RotationControls

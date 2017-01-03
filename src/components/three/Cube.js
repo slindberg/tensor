@@ -17,7 +17,13 @@ class Cube extends Component {
       position,
     }
 
-    return <Mesh {...meshProps} />
+    const object = <Mesh {...meshProps} />
+
+    window.THREE = THREE
+    window.object = object
+
+    return object
+    // return <Mesh {...meshProps} />
   }
 }
 

@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { Object3D } from 'react-three'
-import { Vector3, Quaternion } from 'three'
+import { Vector3, Matrix4 } from 'three'
 import { matrixType, vectorType } from '../../utils/prop-types'
 import Cube from './Cube'
 import ArrowHelper from './ArrowHelper'
@@ -13,12 +13,12 @@ const propTypes = {
   principleValues: vectorType,
   size: PropTypes.number.isRequired,
   position: PropTypes.instanceOf(Vector3).isRequired,
-  quaternion: PropTypes.instanceOf(Quaternion).isRequired,
+  rotationMatrix: PropTypes.instanceOf(Matrix4).isRequired,
 }
 
 class Tensor extends Component {
   render() {
-    const { position, size, quaternion } = this.props
+    const { position, size, rotationMatrix } = this.props
     const vectorProps = this.buildVectors()
     const cubeProps = {
       position,
@@ -27,7 +27,7 @@ class Tensor extends Component {
     }
 
     return (
-      <Object3D quaternion={quaternion}>
+      <Object3D matrix={rotationMatrix}>
         <Cube {...cubeProps} />
         {vectorProps.map(props => <ArrowHelper key={props.key} {...props} />)}
       </Object3D>

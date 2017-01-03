@@ -1,17 +1,29 @@
 import React, { Component, PropTypes } from 'react'
 import { Object3D, Mesh } from 'react-three'
 import { Vector3 } from 'three'
-import { createPlaneGeometry, createCircleGeometry, createInvisibleMaterial } from '../../utils/three'
-import update from 'react-addons-update'
-import unitNormals from '../../utils/unit-normals'
+import { createPlaneGeometry, createCircleGeometry, createMaterial, createInvisibleMaterial } from '../../utils/three'
+import { unitNormalMap } from '../../utils/unit-normals'
 import scene from '../../constants/scene'
 import geometry from '../../constants/geometry'
+import colors from '../../constants/colors'
 
 const planeSize = scene.cameraRange[1]
+
+const pointerEvents = [
+  'onMouseDown',
+  'onMouseUp',
+  'onMouseMove',
+  'onMouseOut',
+  // 'onMouseEnter',
+  // 'onMouseLeave',
+]
+
 
 const propTypes = {
   cameraPosition: PropTypes.instanceOf(Vector3).isRequired,
 }
+
+pointerEvents.forEach(eventName => propTypes[`${eventName}3D`] = PropTypes.func)
 
 class PickerPlanes extends Component {
   constructor(props, context) {
@@ -20,28 +32,28 @@ class PickerPlanes extends Component {
     this.originPosition = new Vector3()
     this.eyePlanePosition = new Vector3()
     this.eyePlaneNormal = new Vector3()
-    this.unitNormals = unitNormals()
+    this.unitNormals = unitNormalMap()
   }
 
   render() {
     const { originPosition, eyePlanePosition, eyePlaneNormal, unitNormals } = this
-    const { cameraPosition } = this.props
+    const { cameraPosition, ...props } = this.props
 
     const planes = [
       {
         name: 'X',
         position: originPosition,
-        normal: unitNormals[0],
+        normal: unitNormals.X,
       },
       {
         name: 'Y',
         position: originPosition,
-        normal: unitNormals[1],
+        normal: unitNormals.Y,
       },
       {
         name: 'Z',
         position: originPosition,
-        normal: unitNormals[2],
+        normal: unitNormals.Z,
       },
       {
         name: 'E',
@@ -51,39 +63,61 @@ class PickerPlanes extends Component {
     ]
 
     // These planes are used to find the intersection with a given plane
-    const planeProps = planes.map((plane) => {
-      return update(plane, {
-        geometry: { '$set': createPlaneGeometry(planeSize, plane.normal) },
-        material: { '$set': createInvisibleMaterial() },
-      })
-    })
+    const pickerProps = planes.map((plane) => {
+      let pickerGeometry
 
-    // These objects are used to actually pick a plane, so geometry is important
-    const pickerProps = planeProps.map((props) => {
       // For the free-rotation plane use a circle centered in the field of view
-      if (props.name === 'E') {
-        return update(props, {
-          geometry: { '$set': createCircleGeometry(geometry.eyePickerRadius, props.normal) },
-        })
+      if (plane.name === 'E') {
+        pickerGeometry = createCircleGeometry(geometry.eyePickerRadius, plane.normal)
+      } else {
+        pickerGeometry = createPlaneGeometry(planeSize, plane.normal)
       }
 
-      // The normal planes work for picking since they overlap each other
-      return props
+      // Add pointer event handlers if specified in props
+      const events = pointerEvents.reduce((result, eventName) => {
+        const eventName3D = `${eventName}3D`
+
+        if (props[eventName3D]) {
+          result[eventName3D] = props[eventName3D]
+        }
+
+        return result
+      }, {})
+
+      return {
+        ...plane,
+        ...events,
+        geometry: pickerGeometry,
+        material: createInvisibleMaterial(),
+      }
     })
 
     return (
       <Object3D>
-        <Object3D name="planes">
-          {planeProps.map(props => <Mesh key={props.name} {...props} />)}
-        </Object3D>
-        <Object3D name="pickers">
-          {pickerProps.map(props => <Mesh key={props.name} {...props} />)}
-        </Object3D>
+        {pickerProps.map(props => <Mesh key={props.name} {...props} />)}
+        {this.buildActivePlane()}
       </Object3D>
     )
+  }
+
+  buildActivePlane() {
+    const { unitNormals } = this
+    const { activePlane } = this.props
+
+    // Only display the active plane for axis normals
+    if (~'XYZ'.indexOf(activePlane)) {
+      const activePlaneProps = {
+        position: new Vector3(0, 0, 0),
+        geometry: createCircleGeometry(geometry.visualPlaneRadius, unitNormals[activePlane]),
+        material: createMaterial(colors.axis[activePlane], scene.planeOpacity),
+      }
+
+      return <Mesh {...activePlaneProps} />
+    }
   }
 }
 
 PickerPlanes.propTypes = propTypes
 
+export { pointerEvents }
 export default PickerPlanes

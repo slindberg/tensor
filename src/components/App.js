@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import TensorInput from './input/Tensor'
-import ThreeSpace from './ThreeSpace'
+import ThreeSpaceContainer from '../containers/ThreeSpaceContainer'
 import update from 'react-addons-update'
 import { loadState, storeState } from '../utils/storage'
 import rotateTensor from '../utils/rotate-tensor'
@@ -48,7 +48,6 @@ class App extends Component {
     const spaceProps = {
       tensor: transformedTensor,
       principleValues,
-      rotationMatrix,
     }
 
     return (
@@ -73,7 +72,7 @@ class App extends Component {
           <TensorInput value={transformedTensor} disabled={true} />
         </div>
         <div className="visualization">
-          <ThreeSpace onRotate={value => this.setStateProp('rotationMatrix', value)} {...spaceProps} />
+          <ThreeSpaceContainer {...spaceProps} />
         </div>
       </div>
     )

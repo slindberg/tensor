@@ -8,24 +8,25 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server",
-    "build": "NODE_ENV=production webpack -p"
+    "start": "webpack-dev-server --hot --mode=development",
+    "build": "webpack --mode=production"
   },
   "author": "Steven Lindberg",
   "license": "MIT",
   "devDependencies": {
-    "babel-core": "^5.8.0",
-    "babel-eslint": "^4.1.3",
-    "babel-loader": "^5.1.1",
-    "babel-plugin-react-transform": "^1.1.1",
-    "css-loader": "^0.22.0",
-    "eslint": "^1.8.0",
-    "eslint-plugin-react": "^3.6.3",
-    "express": "^4.13.3",
-    "extract-text-webpack-plugin": "^0.9.1",
+    "@babel/core": "^7.8.4",
+    "@babel/preset-env": "^7.8.4",
+    "@babel/preset-react": "^7.8.3",
+    "babel-eslint": "^10.0.3",
+    "babel-loader": "^8.0.6",
+    "clean-webpack-plugin": "^3.0.0",
+    "css-loader": "^3.4.2",
+    "eslint": "^6.8.0",
+    "eslint-plugin-react": "^7.18.3",
     "flux": "^2.1.1",
-    "html-webpack-plugin": "^1.6.2",
-    "node-sass": "^3.4.1",
+    "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.9.0",
+    "node-sass": "^4.13.1",
     "numeric": "^1.2.6",
     "react": "^0.14.2",
     "react-addons-update": "^0.14.2",
@@ -33,16 +34,16 @@
     "react-measure": "^0.3.2",
     "react-three": "^0.7.3",
     "react-transform-catch-errors": "^1.0.0",
-    "react-transform-hmr": "^1.0.1",
     "redbox-react": "^1.1.1",
-    "sass-loader": "^3.1.1",
-    "style-loader": "^0.13.0",
+    "sass-loader": "^8.0.2",
+    "style-loader": "^1.1.3",
     "three": "^0.73.0",
-    "webpack": "^1.12.2",
-    "webpack-dev-middleware": "^1.2.0",
-    "webpack-hot-middleware": "^2.4.1"
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
   },
   "dependencies": {
+    "react-hot-loader": "^4.12.19",
     "react-number-input": "^1.14.7"
   }
 }

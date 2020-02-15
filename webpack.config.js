@@ -1,42 +1,68 @@
-var path = require('path')
-var webpack = require('webpack')
-var ExtractTextPlugin = require('extract-text-webpack-plugin')
-var HtmlWebpackPlugin = require('html-webpack-plugin')
+const path = require('path')
+const webpack = require('webpack')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const distDir = path.resolve(process.cwd(), 'dist')
 
-function dir(name) {
-  return path.join(__dirname, name)
-}
+module.exports = (env, argv) => {
+  const isDev = argv.mode === 'development'
 
-module.exports = {
-  devtool: 'source-map',
-  entry: [
-    'webpack-hot-middleware/client',
-    './app/main',
-  ],
-  output: {
-    path: dir('dist'),
-    filename: 'assets/application.js',
-  },
-  plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
-    new ExtractTextPlugin('assets/styles.css'),
-    new HtmlWebpackPlugin({ template: 'app/index.html' }),
-  ],
-  module: {
-    loaders: [
-      {
-        test: /\.js$/,
-        loaders: [ 'babel' ],
-        include: [ dir('app'), /node_modules\/react-.*/ ],
-      },
-      {
-        test: /\.scss$/,
-        loader: ExtractTextPlugin.extract('style', [ 'css?modules&sourceMap', 'sass?sourceMap' ]),
-      },
+  const config = {
+    entry: [
+      './app/main',
     ],
-  },
-  resolve: {
-    extensions: [ '', '.js', '.scss' ],
-  },
+    output: {
+      path: distDir,
+      filename: 'assets/application.js',
+    },
+    plugins: [
+      new webpack.NoEmitOnErrorsPlugin(),
+      new CleanWebpackPlugin(),
+      new MiniCssExtractPlugin({ filename: 'assets/styles.css' }),
+      new HtmlWebpackPlugin({ template: 'app/index.html' }),
+    ],
+    module: {
+      rules: [
+        {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          loader: 'babel-loader',
+        },
+        {
+          test: /\.scss$/,
+          use: [
+            MiniCssExtractPlugin.loader,
+            {
+              loader: 'css-loader',
+              options: {
+                modules: true,
+                sourceMap: isDev,
+              },
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: isDev,
+              },
+            },
+          ],
+        },
+      ],
+    },
+    resolve: {
+      extensions: [ '.js', '.scss' ],
+    },
+  }
+
+  if (isDev) {
+    config.entry.unshift('react-hot-loader/patch')
+    config.devtool = 'source-map'
+    config.devServer = {
+      contentBase: distDir,
+      port: 3000,
+    }
+  }
+
+  return config
 }

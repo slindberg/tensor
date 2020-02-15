@@ -1,3 +1,4 @@
+import { hot } from 'react-hot-loader/root'
 import React, { Component } from 'react'
 import TensorInput from './input/tensor'
 import ThreeSpace from './three-space'
@@ -8,7 +9,7 @@ import eigenValues from '../utils/eigen-values'
 import styles from '../styles/layout'
 import math from '../constants/math'
 
-export class App extends Component {
+class App extends Component {
   constructor(props, context) {
     super(props, context)
 
@@ -78,3 +79,5 @@ export class App extends Component {
     )
   }
 }
+
+export default hot(App)

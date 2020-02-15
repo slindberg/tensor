@@ -1,8 +1,8 @@
 import { Vector3 } from 'three'
-import { identityMatrix } from '../constants/math'
+import math from '../constants/math'
 
 export default function unitNormals() {
-  return identityMatrix.map(vector => new Vector3(...vector))
+  return math.identityMatrix.map(vector => new Vector3(...vector))
 }
 
 export function unitNormalMap() {
@@ -10,6 +10,6 @@ export function unitNormalMap() {
 
   return [ 'X', 'Y', 'Z' ].reduce((result, name, index) => {
     result[name] = normals[index]
-    return result;
+    return result
   }, {})
 }

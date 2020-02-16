@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Object3D, Mesh } from 'react-three'
 import { Vector2, Vector3, Matrix4, Quaternion, Raycaster } from 'three'
 import { Dispatcher } from 'flux'

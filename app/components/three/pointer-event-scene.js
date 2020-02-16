@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom'
-import { PropTypes } from 'react'
+import PropTypes from 'prop-types'
 import { Scene } from 'react-three'
 import { Dispatcher } from 'flux'
 

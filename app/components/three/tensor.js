@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Object3D } from 'react-three'
 import { Vector3, Quaternion } from 'three'
 import { matrixType, vectorType } from '../../utils/prop-types'

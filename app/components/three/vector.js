@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Object3D } from 'react-three'
 import THREE, { Vector3 } from 'three'
 

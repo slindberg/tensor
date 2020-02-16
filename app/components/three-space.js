@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { PerspectiveCamera, AmbientLight, DirectionalLight, AxisHelper } from 'react-three'
 import { Vector3, Matrix3, Matrix4, Quaternion } from 'three'
 import { Dispatcher } from 'flux'

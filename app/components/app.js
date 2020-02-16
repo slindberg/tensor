@@ -1,4 +1,3 @@
-import { hot } from 'react-hot-loader/root'
 import React, { Component } from 'react'
 import TensorInput from './input/tensor'
 import ThreeSpace from './three-space'
@@ -80,4 +79,4 @@ class App extends Component {
   }
 }
 
-export default hot(App)
+export default App

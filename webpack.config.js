@@ -56,7 +56,6 @@ module.exports = (env, argv) => {
   }
 
   if (isDev) {
-    config.entry.unshift('react-hot-loader/patch')
     config.devtool = 'source-map'
     config.devServer = {
       contentBase: distDir,

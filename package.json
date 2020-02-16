@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dev-server --hot --mode=development",
+    "start": "webpack-dev-server --mode=development",
     "build": "webpack --mode=production"
   },
   "author": "Steven Lindberg",
@@ -43,7 +43,6 @@
     "webpack-dev-server": "^3.10.3"
   },
   "dependencies": {
-    "react-hot-loader": "^4.12.19",
     "react-number-input": "^1.14.7"
   }
 }

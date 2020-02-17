@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Object3D } from 'react-three'
-import THREE, { Vector3 } from 'three'
+import * as THREE from 'three'
 
 const propTypes = {
-  position: PropTypes.instanceOf(Vector3).isRequired,
-  direction: PropTypes.instanceOf(Vector3).isRequired,
+  position: PropTypes.instanceOf(THREE.Vector3).isRequired,
+  direction: PropTypes.instanceOf(THREE.Vector3).isRequired,
   invert: PropTypes.bool,
   magnitude: PropTypes.number.isRequired,
   scale: PropTypes.number.isRequired,

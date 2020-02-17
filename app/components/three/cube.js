@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Mesh } from 'react-three'
-import THREE, { Vector3 } from 'three'
+import * as THREE from 'three'
 
 const propTypes = {
-  position: PropTypes.instanceOf(Vector3).isRequired,
+  position: PropTypes.instanceOf(THREE.Vector3).isRequired,
   size: PropTypes.number.isRequired,
   color: PropTypes.number.isRequired,
 }

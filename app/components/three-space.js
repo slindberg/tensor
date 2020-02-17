@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { PerspectiveCamera, AmbientLight, DirectionalLight, AxisHelper } from 'react-three'
+import { Scene, PerspectiveCamera, AmbientLight, DirectionalLight, AxisHelper } from 'react-three'
 import { Vector3, Matrix3, Matrix4, Quaternion } from 'three'
 import { Dispatcher } from 'flux'
 import Measure from 'react-measure'
-import PointerEventScene from './three/pointer-event-scene'
+import PointerEventRenderer from './three/pointer-event-renderer'
 import RotationControls from './three/rotation-controls'
 import Tensor from './three/tensor'
 import update from 'react-addons-update'
@@ -43,7 +43,7 @@ export default class ThreeSpace extends Component {
 
   updateIsRotating(isRotating) {
     this.setState(update(this.state, {
-      isRotating: { '$set': isRotating }
+      isRotating: { '$set': isRotating },
     }))
   }
 
@@ -82,12 +82,18 @@ export default class ThreeSpace extends Component {
       rotation: this.rotationMatrix,
       dispatcher,
     }
-    const sceneProps = {
+    const sizeProps = {
       width: size,
       height: size,
+    }
+    const renderProps = {
+      ...sizeProps,
       transparent: true,
-      camera: 'maincamera',
       dispatcher,
+    }
+    const sceneProps = {
+      ...sizeProps,
+      camera: 'maincamera',
     }
     const cameraProps = {
       name: 'maincamera',
@@ -112,20 +118,24 @@ export default class ThreeSpace extends Component {
 
     return (
       <Measure
-        whitelist={[ 'width', 'height' ]}
-        onMeasure={(dimensions) => { this.setState({ dimensions })}}>
-        <div className={isRotating ? styles.rotating : styles.static }>
-          <PointerEventScene {...sceneProps}>
-            <PerspectiveCamera {...cameraProps} />
-            <AmbientLight color={colors.ambientLight} />
-            <DirectionalLight color={colors.directionalLight} {...lightProps} />
-            <AxisHelper size={geometry.axisSize} />
-            <Tensor {...tensorProps} />
-            <RotationControls {...controlProps}
-              onRotate={this.updateRotation.bind(this)}
-              onIsRotating={this.updateIsRotating.bind(this)} />
-          </PointerEventScene>
-        </div>
+        bounds
+        onResize={contentRect => { this.setState({ dimensions: contentRect.bounds })}}>
+        {({ measureRef }) => (
+          <div ref={measureRef} className={ isRotating ? styles.rotating : styles.static }>
+            <PointerEventRenderer {...renderProps}>
+              <Scene {...sceneProps}>
+                <PerspectiveCamera {...cameraProps} />
+                <AmbientLight color={colors.ambientLight} />
+                <DirectionalLight color={colors.directionalLight} {...lightProps} />
+                <AxisHelper size={geometry.axisSize} />
+                <Tensor {...tensorProps} />
+                <RotationControls {...controlProps}
+                  onRotate={this.updateRotation.bind(this)}
+                  onIsRotating={this.updateIsRotating.bind(this)} />
+              </Scene>
+            </PointerEventRenderer>
+          </div>
+        )}
       </Measure>
     )
   }

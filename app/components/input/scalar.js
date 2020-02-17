@@ -32,7 +32,7 @@ export default class ScalarInput extends Component {
     return (
       <div className={styles.scalar}>
         <NumberInput {...inputProps}
-          onChange={event => this.updateValue(event.target.value)}
+          onChange={value => this.updateValue(value)}
           onFocus={event => this.selectText(event.target)} />
       </div>
     )

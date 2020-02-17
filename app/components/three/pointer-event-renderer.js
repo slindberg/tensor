@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
-import { Scene } from 'react-three'
+import { Renderer } from 'react-three'
 import { Dispatcher } from 'flux'
 
 const pointerEvents = [
@@ -15,7 +15,7 @@ const propTypes = {
   dispatcher: PropTypes.instanceOf(Dispatcher).isRequired,
 }
 
-export default class PointerEventScene extends Scene {
+export default class PointerEventRenderer extends Renderer {
   constructor(props, context) {
     super(props, context)
 
@@ -70,4 +70,4 @@ export default class PointerEventScene extends Scene {
   }
 }
 
-PointerEventScene.propTypes = propTypes
+PointerEventRenderer.propTypes = propTypes

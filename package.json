@@ -43,6 +43,6 @@
     "react-measure": "^2.3.0",
     "react-number-input": "^15.5.1",
     "react-three": "^0.9.7",
-    "three": "^0.83.0"
+    "three": "^0.125.0"
   }
 }
